@@ -84,13 +84,16 @@ export const router = createBrowserRouter([
             path: 'fees-rates',
             element: <FeesAndRates />,
           },
-          { path: 'fees-rates/gift-card-rates',
+          { 
+            path: 'fees-rates/gift-card-rates',
             element: <GiftCardRates />,
           },
-          { path: 'fees-rates/ngn-markup',
+          { 
+            path: 'fees-rates/ngn-markup',
             element: <NgnMarkup />,
           },
-          { path: 'fees-rates/price-calculator',
+          { 
+            path: 'fees-rates/price-calculator',
             element: <PriceCalculator />,
           },
           {
@@ -108,14 +111,6 @@ export const router = createBrowserRouter([
           {
             path: 'fees-rates/view/:currency/:network',
             element: <ViewFee />,
-          },
-          {
-            path: 'fees-rates/edit-fee',
-            element: <EditFee />,
-          },
-          {
-            path: 'fees-rates/edit-network-name',
-            element: <EditNetworkName />,
           },
           {
             path: 'fees-rates/search',
