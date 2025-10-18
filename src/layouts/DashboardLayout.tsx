@@ -56,7 +56,7 @@ const navItems: NavItem[] = [
     sub_menu: [
       { title: 'View all fees', path: '/fees-rates' },
       { title: 'Gift card rates', path: '/fees-rates/gift-card-rates' },
-      { title: 'NGN Markup', path: '/fees-rates/ngn-markup' },
+      { title: 'NGN Rates', path: '/fees-rates/ngn-markup' },
       { title: 'Price Calculator', path: '/fees-rates/price-calculator' },
     ]
   },
