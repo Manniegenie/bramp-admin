@@ -26,8 +26,7 @@ export function FeesAndRates() {
   const [filters, setFilters] = useState({
     searchTerm: '',
     currency: '',
-    network: '',
-    feeType: ''
+    network: ''
   });
   
   // Active filters for display
@@ -36,7 +35,7 @@ export function FeesAndRates() {
 
   // Count active filters
   const activeFilterCount = Object.entries(activeFilters)
-    .filter(([key, value]) => value !== '')
+    .filter(([, value]) => value !== '')
     .length;
 
   // Onramp and Offramp states
@@ -82,8 +81,7 @@ export function FeesAndRates() {
       const searchTerm = activeFilters.searchTerm.toLowerCase();
       filtered = filtered.filter(fee => 
         fee.currency?.toLowerCase().includes(searchTerm) ||
-        fee.network?.toLowerCase().includes(searchTerm) ||
-        fee.feeType?.toLowerCase().includes(searchTerm)
+        fee.network?.toLowerCase().includes(searchTerm)
       );
     }
     
@@ -93,10 +91,6 @@ export function FeesAndRates() {
     
     if (activeFilters.network) {
       filtered = filtered.filter(fee => fee.network === activeFilters.network);
-    }
-    
-    if (activeFilters.feeType) {
-      filtered = filtered.filter(fee => fee.feeType === activeFilters.feeType);
     }
     
     setFilteredFees(filtered);
@@ -118,8 +112,7 @@ export function FeesAndRates() {
     const defaultFilters = {
       searchTerm: '',
       currency: '',
-      network: '',
-      feeType: ''
+      network: ''
     };
     setFilters(defaultFilters);
     setActiveFilters(defaultFilters);
@@ -249,7 +242,7 @@ export function FeesAndRates() {
               {/* Advanced Filters Panel */}
               {showFilters && (
                 <div className="mt-4 p-4 border border-gray-200 rounded-lg bg-gray-50">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {/* Currency */}
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Currency</label>
@@ -280,20 +273,6 @@ export function FeesAndRates() {
                       </select>
                     </div>
 
-                    {/* Fee Type */}
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Fee Type</label>
-                      <select
-                        value={filters.feeType}
-                        onChange={(e) => handleFilterChange('feeType', e.target.value)}
-                        className="w-full border border-gray-300 rounded-md px-3 py-2"
-                      >
-                        <option value="">All fee types</option>
-                        {Array.from(new Set(fees?.map(fee => fee.feeType).filter(Boolean))).map(feeType => (
-                          <option key={feeType} value={feeType}>{feeType}</option>
-                        ))}
-                      </select>
-                    </div>
                   </div>
 
                   <div className="flex justify-end mt-4">
