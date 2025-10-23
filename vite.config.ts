@@ -20,6 +20,6 @@ export default defineConfig({
     assetsDir: 'assets',
   },
   define: {
-    'import.meta.env.VITE_BASE_URL': JSON.stringify('https://priscaai.online/'),
+    'import.meta.env.VITE_BASE_URL': JSON.stringify('https://priscaai.online'),
   },
 })
