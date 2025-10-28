@@ -320,7 +320,6 @@ export type TransactionType =
 
 export type TransactionStatus =
   | 'CONFIRMED'
-  | 'COMPLETED'
   | 'PENDING'
   | 'EXPIRED'
 

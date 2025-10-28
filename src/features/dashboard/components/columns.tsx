@@ -42,7 +42,6 @@ export const columns: ColumnDef<Transaction>[] = [
       const status = info.getValue() as string;
       const badges: Record<string, string> = {
         'CONFIRMED': 'bg-green-100 text-green-800',
-        'COMPLETED': 'bg-green-200 text-green-900',
         'PENDING': 'bg-yellow-100 text-yellow-800',
         'EXPIRED': 'bg-gray-100 text-gray-800'
       };
@@ -99,51 +98,24 @@ export const columns: ColumnDef<Transaction>[] = [
     }
   },
   {
-    id: "flags",
-    header: "Deposit/Withdrawal",
-    cell: ({ row }) => {
-      const tx = row.original;
-
-      const depositConfirmed = tx.status === 'CONFIRMED' || tx.status === 'COMPLETED';
-      const withdrawalCompleted = tx.payoutStatus === 'SUCCESS';
-
-      const Check = () => (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-green-600" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-7.25 7.25a1 1 0 01-1.414 0l-3-3a1 1 0 111.414-1.414L8.5 11.086l6.543-6.543a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-      );
-
-      return (
-        <div className="flex items-center gap-4 text-xs">
-          <div className="flex items-center gap-1">
-            <span className="text-gray-600">Deposit Confirmed</span>
-            {depositConfirmed ? <Check /> : <span>-</span>}
-          </div>
-          <div className="flex items-center gap-1">
-            <span className="text-gray-600">Withdrawal Completed</span>
-            {withdrawalCompleted ? <Check /> : <span>-</span>}
-          </div>
-        </div>
-      );
-    }
-  },
-  {
     id: "details",
-    header: "Full Details",
+    header: "Details",
     cell: ({ row }) => {
       const tx = row.original;
+
+      // Show chatbot transaction details (SELL/BUY only)
       return (
-        <div className="text-xs space-x-4 whitespace-nowrap overflow-x-auto max-w-[60vw]">
-          <span className="font-medium">{tx.token} {tx.network}</span>
-          {tx.paymentId && (<span className="text-gray-500 font-mono">PID: {tx.paymentId}</span>)}
-          {tx.webhookRef && (<span className="text-gray-500 font-mono">WH: {tx.webhookRef}</span>)}
-          {tx.depositAddress && (<span className="text-gray-500 font-mono">Addr: {tx.depositAddress}</span>)}
-          {tx.depositMemo && (<span className="text-gray-500 font-mono">Memo: {tx.depositMemo}</span>)}
-          {typeof tx.sellAmount !== 'undefined' && (<span>Sell: {tx.sellAmount}</span>)}
-          {typeof tx.receiveAmount !== 'undefined' && (<span>Quote NGN: {tx.receiveAmount}</span>)}
-          {typeof tx.actualReceiveAmount !== 'undefined' && (<span>Actual NGN: {tx.actualReceiveAmount}</span>)}
-          {tx.payout?.bankName && (<span>Payout Bank: {tx.payout.bankName}</span>)}
-          {tx.payoutStatus && (<span>Payout Status: {tx.payoutStatus}</span>)}
-          {tx.status && (<span>Status: {tx.status}</span>)}
-          {tx.expiresAt && (<span>Expires: {new Date(tx.expiresAt).toLocaleString()}</span>)}
+        <div className="text-xs space-y-1">
+          <div className="font-medium">{tx.token} {tx.network}</div>
+          {tx.paymentId && (
+            <div className="text-gray-500 font-mono">{tx.paymentId}</div>
+          )}
+          {tx.depositAddress && (
+            <div className="text-gray-500 font-mono">{tx.depositAddress.substring(0, 8)}...</div>
+          )}
+          {tx.payout?.bankName && (
+            <div className="text-gray-500">{tx.payout.bankName}</div>
+          )}
         </div>
       );
     }
