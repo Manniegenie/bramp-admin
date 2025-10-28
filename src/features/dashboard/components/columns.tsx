@@ -99,6 +99,97 @@ export const columns: ColumnDef<Transaction>[] = [
     }
   },
   {
+    accessorKey: "paymentId",
+    header: "Payment ID",
+    cell: info => {
+      const value = info.getValue() as string | undefined;
+      return value ? <span className="font-mono text-xs">{value.substring(0, 12)}...</span> : '—';
+    }
+  },
+  {
+    accessorKey: "webhookRef",
+    header: "Webhook Ref",
+    cell: info => {
+      const value = info.getValue() as string | undefined;
+      return value ? <span className="font-mono text-xs">{value.substring(0, 12)}...</span> : '—';
+    }
+  },
+  {
+    accessorKey: "depositAddress",
+    header: "Deposit Address",
+    cell: info => {
+      const value = info.getValue() as string | undefined;
+      return value ? <span className="font-mono text-xs">{value.substring(0, 10)}...</span> : '—';
+    }
+  },
+  {
+    accessorKey: "depositMemo",
+    header: "Memo",
+    cell: info => {
+      const value = info.getValue() as string | undefined;
+      return value ? <span className="font-mono text-xs">{value}</span> : '—';
+    }
+  },
+  {
+    accessorKey: "receiveAmount",
+    header: "Quote NGN",
+    cell: info => {
+      const value = info.getValue() as number | undefined;
+      return typeof value === 'number' ? (
+        <span className="font-mono">₦{Math.round(value).toLocaleString()}</span>
+      ) : '—';
+    }
+  },
+  {
+    accessorKey: "actualReceiveAmount",
+    header: "Actual NGN",
+    cell: info => {
+      const value = info.getValue() as number | undefined;
+      return typeof value === 'number' ? (
+        <span className="font-mono">₦{Math.round(value).toLocaleString()}</span>
+      ) : '—';
+    }
+  },
+  {
+    id: "payoutBank",
+    header: "Payout Bank",
+    cell: ({ row }) => {
+      const tx = row.original as any;
+      const bank = tx?.payout?.bankName as string | undefined;
+      return bank ? <span>{bank}</span> : '—';
+    }
+  },
+  {
+    accessorKey: "payoutStatus",
+    header: "Payout Status",
+    cell: info => {
+      const status = (info.getValue() as string | undefined) || 'NOT_SET';
+      const badges: Record<string, string> = {
+        'SUCCESS': 'bg-green-100 text-green-800',
+        'PENDING': 'bg-yellow-100 text-yellow-800',
+        'FAILED': 'bg-red-100 text-red-800',
+        'NOT_SET': 'bg-gray-100 text-gray-800'
+      };
+      const className = badges[status] || 'bg-gray-100 text-gray-800';
+      return <span className={`px-2 py-1 rounded text-xs font-medium ${className}`}>{status}</span>;
+    }
+  },
+  {
+    accessorKey: "expiresAt",
+    header: "Expires",
+    cell: info => {
+      const v = info.getValue() as string | Date | undefined;
+      if (!v) return '—';
+      const date = new Date(v);
+      return (
+        <div className="text-sm">
+          <div>{date.toLocaleDateString()}</div>
+          <div className="text-gray-500 text-xs">{date.toLocaleTimeString()}</div>
+        </div>
+      );
+    }
+  },
+  {
     id: "flags",
     header: "Deposit/Withdrawal",
     cell: ({ row }) => {
@@ -121,29 +212,6 @@ export const columns: ColumnDef<Transaction>[] = [
             <span className="text-gray-600">Withdrawal Completed</span>
             {withdrawalCompleted ? <Check /> : <span>-</span>}
           </div>
-        </div>
-      );
-    }
-  },
-  {
-    id: "details",
-    header: "Full Details",
-    cell: ({ row }) => {
-      const tx = row.original;
-      return (
-        <div className="text-xs space-x-4 whitespace-nowrap overflow-x-auto max-w-[60vw]">
-          <span className="font-medium">{tx.token} {tx.network}</span>
-          {tx.paymentId && (<span className="text-gray-500 font-mono">PID: {tx.paymentId}</span>)}
-          {tx.webhookRef && (<span className="text-gray-500 font-mono">WH: {tx.webhookRef}</span>)}
-          {tx.depositAddress && (<span className="text-gray-500 font-mono">Addr: {tx.depositAddress}</span>)}
-          {tx.depositMemo && (<span className="text-gray-500 font-mono">Memo: {tx.depositMemo}</span>)}
-          {typeof tx.sellAmount !== 'undefined' && (<span>Sell: {tx.sellAmount}</span>)}
-          {typeof tx.receiveAmount !== 'undefined' && (<span>Quote NGN: {tx.receiveAmount}</span>)}
-          {typeof tx.actualReceiveAmount !== 'undefined' && (<span>Actual NGN: {tx.actualReceiveAmount}</span>)}
-          {tx.payout?.bankName && (<span>Payout Bank: {tx.payout.bankName}</span>)}
-          {tx.payoutStatus && (<span>Payout Status: {tx.payoutStatus}</span>)}
-          {tx.status && (<span>Status: {tx.status}</span>)}
-          {tx.expiresAt && (<span>Expires: {new Date(tx.expiresAt).toLocaleString()}</span>)}
         </div>
       );
     }
