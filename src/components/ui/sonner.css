@@ -1,0 +1,16 @@
+.sonner-toast[data-type="success"] {
+  background-color: #22c55e !important; /* green-500 */
+  color: #fff !important;
+}
+.sonner-toast[data-type="error"] {
+  background-color: #ef4444 !important; /* red-500 */
+  color: #fff !important;
+}
+.sonner-toast[data-type="warning"] {
+  background-color: #eab308 !important; /* yellow-500 */
+  color: #fff !important;
+}
+.sonner-toast[data-type="info"] {
+  background-color: #3b82f6 !important; /* blue-500 */
+  color: #fff !important;
+}
