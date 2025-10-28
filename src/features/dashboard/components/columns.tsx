@@ -24,13 +24,6 @@ export const columns: ColumnDef<Transaction>[] = [
     cell: info => {
       const type = info.getValue() as string;
       const badges: Record<string, string> = {
-        'SWAP': 'bg-blue-100 text-blue-800',
-        'OBIEX_SWAP': 'bg-blue-100 text-blue-800',
-        'DEPOSIT': 'bg-green-100 text-green-800',
-        'WITHDRAWAL': 'bg-red-100 text-red-800',
-        'GIFTCARD': 'bg-purple-100 text-purple-800',
-        'INTERNAL_TRANSFER_SENT': 'bg-orange-100 text-orange-800',
-        'INTERNAL_TRANSFER_RECEIVED': 'bg-teal-100 text-teal-800',
         'SELL': 'bg-emerald-100 text-emerald-800',
         'BUY': 'bg-cyan-100 text-cyan-800'
       };
@@ -48,13 +41,8 @@ export const columns: ColumnDef<Transaction>[] = [
     cell: info => {
       const status = info.getValue() as string;
       const badges: Record<string, string> = {
-        'SUCCESSFUL': 'bg-green-100 text-green-800',
-        'COMPLETED': 'bg-green-100 text-green-800',
         'CONFIRMED': 'bg-green-100 text-green-800',
         'PENDING': 'bg-yellow-100 text-yellow-800',
-        'PROCESSING': 'bg-blue-100 text-blue-800',
-        'FAILED': 'bg-red-100 text-red-800',
-        'REJECTED': 'bg-red-100 text-red-800',
         'EXPIRED': 'bg-gray-100 text-gray-800'
       };
       const className = badges[status] || 'bg-gray-100 text-gray-800';
@@ -115,66 +103,21 @@ export const columns: ColumnDef<Transaction>[] = [
     cell: ({ row }) => {
       const tx = row.original;
 
-      // Show chatbot transaction details
-      if (tx.type === 'SELL' || tx.type === 'BUY') {
-        return (
-          <div className="text-xs space-y-1">
-            <div className="font-medium">{tx.token} {tx.network}</div>
-            {tx.paymentId && (
-              <div className="text-gray-500 font-mono">{tx.paymentId}</div>
-            )}
-            {tx.depositAddress && (
-              <div className="text-gray-500 font-mono">{tx.depositAddress.substring(0, 8)}...</div>
-            )}
-            {tx.payout?.bankName && (
-              <div className="text-gray-500">{tx.payout.bankName}</div>
-            )}
-          </div>
-        );
-      }
-
-      // Show swap details
-      if (tx.type === 'SWAP' || tx.type === 'OBIEX_SWAP') {
-        return (
-          <div className="text-xs space-y-1">
-            <div>{tx.fromCurrency} → {tx.toCurrency}</div>
-            {tx.swapType && (
-              <div className="text-gray-500">{tx.swapType}</div>
-            )}
-          </div>
-        );
-      }
-
-      // Show withdrawal details
-      if (tx.bankName) {
-        return (
-          <div className="text-xs space-y-1">
-            <div>{tx.bankName}</div>
-            <div className="text-gray-500">{tx.accountNumberMasked}</div>
-          </div>
-        );
-      }
-
-      // Show transfer details
-      if (tx.recipientUsername || tx.senderUsername) {
-        return (
-          <div className="text-xs">
-            {tx.recipientUsername ? `To: ${tx.recipientUsername}` : `From: ${tx.senderUsername}`}
-          </div>
-        );
-      }
-
-      // Show giftcard details
-      if (tx.cardType) {
-        return (
-          <div className="text-xs space-y-1">
-            <div>{tx.cardType}</div>
-            {tx.country && <div className="text-gray-500">{tx.country}</div>}
-          </div>
-        );
-      }
-
-      return <span className="text-gray-400">—</span>;
+      // Show chatbot transaction details (SELL/BUY only)
+      return (
+        <div className="text-xs space-y-1">
+          <div className="font-medium">{tx.token} {tx.network}</div>
+          {tx.paymentId && (
+            <div className="text-gray-500 font-mono">{tx.paymentId}</div>
+          )}
+          {tx.depositAddress && (
+            <div className="text-gray-500 font-mono">{tx.depositAddress.substring(0, 8)}...</div>
+          )}
+          {tx.payout?.bankName && (
+            <div className="text-gray-500">{tx.payout.bankName}</div>
+          )}
+        </div>
+      );
     }
   },
   {

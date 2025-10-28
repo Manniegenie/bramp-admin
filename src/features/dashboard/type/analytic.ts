@@ -6,16 +6,14 @@ export interface DashboardUsers {
   chatbotVerified: number
 }
 
-// Transaction Statistics
+// Transaction Statistics (now chatbot-only)
 export interface TransactionStats {
   total: number
-  deposits: number
-  withdrawals: number
-  swaps: number
-  giftcards: number
+  sell: number
+  buy: number
   completed: number
   pending: number
-  failed: number
+  expired: number
 }
 
 // Swap Statistics
@@ -41,12 +39,11 @@ export interface NgnzWithdrawalStats {
   totalFees: number
 }
 
-// Recent Activity (24h)
+// Recent Activity (24h) - now chatbot-only
 export interface RecentActivity {
   transactions: number
-  deposits: number
-  withdrawals: number
-  swaps: number
+  sellTransactions: number
+  buyTransactions: number
   volume: number
 }
 
@@ -316,24 +313,14 @@ export interface SwapPairAnalyticsResponse {
   data: SwapPairStat[]
 }
 
-// Type unions for type safety
+// Type unions for type safety (chatbot-only)
 export type TransactionType =
-  | 'SWAP'
-  | 'OBIEX_SWAP'
-  | 'DEPOSIT'
-  | 'WITHDRAWAL'
-  | 'GIFTCARD'
-  | 'INTERNAL_TRANSFER_SENT'
-  | 'INTERNAL_TRANSFER_RECEIVED'
   | 'SELL'
   | 'BUY'
 
 export type TransactionStatus =
-  | 'SUCCESSFUL'
-  | 'COMPLETED'
   | 'CONFIRMED'
   | 'PENDING'
-  | 'FAILED'
   | 'EXPIRED'
 
 export type UserVerificationStatus =

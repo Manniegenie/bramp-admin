@@ -280,15 +280,8 @@ export function Dashboard() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                 >
                   <option value="">All Types</option>
-                  <option value="SWAP">Swap</option>
-                  <option value="OBIEX_SWAP">Obiex Swap</option>
-                  <option value="DEPOSIT">Deposit</option>
-                  <option value="WITHDRAWAL">Withdrawal</option>
-                  <option value="GIFTCARD">Gift Card</option>
-                  <option value="INTERNAL_TRANSFER_SENT">Transfer Sent</option>
-                  <option value="INTERNAL_TRANSFER_RECEIVED">Transfer Received</option>
-                  <option value="SELL">Chatbot Sell</option>
-                  <option value="BUY">Chatbot Buy</option>
+                  <option value="SELL">Sell</option>
+                  <option value="BUY">Buy</option>
                 </select>
               </div>
 
@@ -301,11 +294,8 @@ export function Dashboard() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                 >
                   <option value="">All Status</option>
-                  <option value="SUCCESSFUL">Successful</option>
-                  <option value="COMPLETED">Completed</option>
                   <option value="CONFIRMED">Confirmed</option>
                   <option value="PENDING">Pending</option>
-                  <option value="FAILED">Failed</option>
                   <option value="EXPIRED">Expired</option>
                 </select>
               </div>
@@ -447,7 +437,7 @@ export function Dashboard() {
       </div>
 
       {/* Dashboard Cards */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         <Card className="p-6 bg-primary rounded-lg text-white relative overflow-hidden">
           <img src={CardBg} className='object-fit absolute left-0 top-0' alt='Logo' />
           <div className="flex flex-col items-start gap-3 space-x-4">
@@ -456,12 +446,6 @@ export function Dashboard() {
           </div>
         </Card>
 
-        <Card className="p-6 rounded-lg border-gray-200 shadow-none">
-          <div className="flex flex-col items-start gap-3 space-x-4">
-            <p className="text-sm text-gray-500 font-semibold">Regular Transactions</p>
-            <h3 className="text-2xl font-bold">{loading ? '...' : analytics?.data?.transactions?.total ?? '—'}</h3>
-          </div>
-        </Card>
 
         <Card className="p-6 rounded-lg border-gray-200 shadow-none">
           <div className="flex flex-col items-start gap-3 space-x-4">
