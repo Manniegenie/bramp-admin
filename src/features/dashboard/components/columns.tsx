@@ -81,7 +81,7 @@ export const columns: ColumnDef<Transaction>[] = [
     cell: info => {
       const value = info.getValue() as string;
       return value ? (
-        <span className="font-mono text-sm">{value.substring(0, 12)}...</span>
+        <span className="font-mono text-sm whitespace-nowrap">{value}</span>
       ) : '—';
     }
   },
@@ -103,7 +103,7 @@ export const columns: ColumnDef<Transaction>[] = [
     header: "Payment ID",
     cell: info => {
       const value = info.getValue() as string | undefined;
-      return value ? <span className="font-mono text-xs">{value.substring(0, 12)}...</span> : '—';
+      return value ? <span className="font-mono text-xs whitespace-nowrap">{value}</span> : '—';
     }
   },
   {
@@ -111,7 +111,7 @@ export const columns: ColumnDef<Transaction>[] = [
     header: "Webhook Ref",
     cell: info => {
       const value = info.getValue() as string | undefined;
-      return value ? <span className="font-mono text-xs">{value.substring(0, 12)}...</span> : '—';
+      return value ? <span className="font-mono text-xs whitespace-nowrap">{value}</span> : '—';
     }
   },
   {
@@ -119,7 +119,7 @@ export const columns: ColumnDef<Transaction>[] = [
     header: "Deposit Address",
     cell: info => {
       const value = info.getValue() as string | undefined;
-      return value ? <span className="font-mono text-xs">{value.substring(0, 10)}...</span> : '—';
+      return value ? <span className="font-mono text-xs whitespace-nowrap">{value}</span> : '—';
     }
   },
   {
