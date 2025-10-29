@@ -59,12 +59,6 @@ export function Dashboard() {
   // Count active filters
   const activeFilterCount = Object.values(activeFilters).filter(v => v !== '').length
 
-  // Temporary fake login for testing
-  const handleFakeLogin = () => {
-    const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZmI1ODMxMDhjNWQ4MDczMzU5YTE4MCIsImVtYWlsIjoibWFudWVsd3VybGRAZ21haWwuY29tIiwiYWRtaW5OYW1lIjoiTWFudWVsIiwicm9sZSI6ImFkbWluIiwiYWRtaW5Sb2xlIjoic3VwZXJfYWRtaW4iLCJwZXJtaXNzaW9ucyI6eyJjYW5EZWxldGVVc2VycyI6dHJ1ZSwiY2FuTWFuYWdlV2FsbGV0cyI6dHJ1ZSwiY2FuTWFuYWdlRmVlcyI6dHJ1ZSwiY2FuVmlld1RyYW5zYWN0aW9ucyI6dHJ1ZSwiY2FuRnVuZFVzZXJzIjp0cnVlLCJjYW5NYW5hZ2VLWUMiOnRydWUsImNhbkFjY2Vzc1JlcG9ydHMiOnRydWUsImNhbk1hbmFnZUFkbWlucyI6dHJ1ZX0sImlzQWN0aXZlIjp0cnVlLCJpYXQiOjE3NjE3NDczODgsImV4cCI6MTc2MTc1MDk4OH0.caLBWGd5qR0Obrn5AbbtPVQNAsf3G_bfoWzQaWsfFJY';
-    localStorage.setItem('token', token);
-    window.location.reload();
-  };
 
   useEffect(() => {
     titleCtx?.setTitle('Dashboard');
@@ -114,7 +108,6 @@ export function Dashboard() {
           limit: 50
         })
 
-        console.log('Filter result:', result)
 
         if (result.success) {
           if (reset || page === 1) {
@@ -130,7 +123,6 @@ export function Dashboard() {
         // Use regular transactions endpoint
         const result = await getRecentTransactions(page, 50)
 
-        console.log('Recent transactions result:', result)
 
         if (result.success) {
           if (reset || page === 1) {
@@ -543,19 +535,6 @@ export function Dashboard() {
           </div>
         ) : (
           <div ref={tableContainerRef} className="max-h-[600px] overflow-y-auto">
-      {/* Debug info */}
-      <div className="mb-4 p-2 bg-gray-100 text-xs">
-        <p>Transactions count: {transactions.length}</p>
-        <p>Loading: {transactionsLoading ? 'true' : 'false'}</p>
-        <p>Active filters: {activeFilterCount}</p>
-        <p>Token: {localStorage.getItem('token') ? 'Present' : 'Missing'}</p>
-        <button 
-          onClick={handleFakeLogin}
-          className="mt-2 px-3 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
-        >
-          🔑 Set Test Token & Reload
-        </button>
-      </div>
             
             <DataTable columns={columns} data={transactions} />
 

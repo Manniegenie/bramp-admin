@@ -54,7 +54,6 @@ export function RegenerateWalletByPhone() {
         }
       } catch (err) {
         // non-fatal
-        console.debug('refresh wallets failed', err);
       }
       toast.success(res?.message || 'Wallets regenerated');
     } catch (err) {

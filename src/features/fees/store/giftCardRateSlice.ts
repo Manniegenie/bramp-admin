@@ -93,7 +93,6 @@ const giftCardRateSlice = createSlice({
         if (action.payload && action.payload.rates) {
           state.rates = action.payload.rates;
           state.pagination = action.payload.pagination;
-          console.log("Rates list", state.rates);
         } else {
           state.rates = [];
           state.pagination = null;

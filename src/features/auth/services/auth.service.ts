@@ -18,45 +18,7 @@ class AuthService {
     }
   }
 
-  //  async login(credentials: LoginCredentials) {
-  //   // FAKE LOGIN FOR DEVELOPMENT
-  //   await new Promise((resolve) => setTimeout(resolve, 500)); // Simulate network delay
-  //   if (credentials.email === 'test@bramp.com' && credentials.passwordPin === "123456") {
-  //     return {
-  //       success: true,
-  //       message: "Admin sign-in successful",
-  //       accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZDAyZDQ2OWM2MmI2ZjgyNTFkYzMyNCIsImVtYWlsIjoidGVzdEBicmFtcC5jb20iLCJhZG1pbk5hbWUiOiJUZXN0IEFkbWluIiwicm9sZSI6ImFkbWluIiwiYWRtaW5Sb2xlIjoic3VwZXJfYWRtaW4iLCJwZXJtaXNzaW9ucyI6eyJjYW5EZWxldGVVc2VycyI6dHJ1ZSwiY2FuTWFuYWdlV2FsbGV0cyI6dHJ1ZSwiY2FuTWFuYWdlRmVlcyI6dHJ1ZSwiY2FuVmlld1RyYW5zYWN0aW9ucyI6dHJ1ZSwiY2FuRnVuZFVzZXJzIjp0cnVlLCJjYW5NYW5hZ2VLWUMiOnRydWUsImNhbkFjY2Vzc1JlcG9ydHMiOnRydWUsImNhbk1hbmFnZUFkbWlucyI6dHJ1ZX0sImlzQWN0aXZlIjp0cnVlLCJpYXQiOjE3NTg1NDE3NDAsImV4cCI6MTc1ODU0NTM0MH0.XouNQG1nuZyu9_qTKzs3pVjkofNOOr_EyyqkikmfAvY",
-  //       refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZDAyZDQ2OWM2MmI2ZjgyNTFkYzMyNCIsInR5cGUiOiJhZG1pbiIsImlhdCI6MTc1ODU0MTc0MCwiZXhwIjoxNzU5MTQ2NTQwfQ.RSp9ziOoECkL6qAvSKqsklZFMwqa7BhVWxaVXXbcZKA",
-  //       admin: {
-  //         id: "68d02d469c62b6f8251dc324",
-  //         adminName: "Test Admin",
-  //         name: "Test Admin",
-  //         email: "test@bramp.com",
-  //         role: "super_admin",
-  //         permissions: {
-  //           canDeleteUsers: true,
-  //           canManageWallets: true,
-  //           canManageFees: true,
-  //           canViewTransactions: true,
-  //           canFundUsers: true,
-  //           canManageKYC: true,
-  //           canAccessReports: true,
-  //           canManageAdmins: true
-  //         },
-  //         createdAt: "2025-09-21T16:52:22.214Z"
-  //       }
-  //     };
-  //   } else {
-  //     throw { success: false, message: 'Invalid PIN. 4 attempt(s) remaining.' };
-  //   }
-  // }
 
-    async fakeLogin() {
-      // Store the provided token in localStorage
-      const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4ZDAyZDQ2OWM2MmI2ZjgyNTFkYzMyNCIsImVtYWlsIjoidGVzdEBicmFtcC5jb20iLCJhZG1pbk5hbWUiOiJUZXN0IEFkbWluIiwicm9sZSI6ImFkbWluIiwiYWRtaW5Sb2xlIjoic3VwZXJfYWRtaW4iLCJwZXJtaXNzaW9ucyI6eyJjYW5EZWxldGVVc2VycyI6dHJ1ZSwiY2FuTWFuYWdlV2FsbGV0cyI6dHJ1ZSwiY2FuTWFuYWdlRmVlcyI6dHJ1ZSwiY2FuVmlld1RyYW5zYWN0aW9ucyI6dHJ1ZSwiY2FuRnVuZFVzZXJzIjp0cnVlLCJjYW5NYW5hZ2VLWUMiOnRydWUsImNhbkFjY2Vzc1JlcG9ydHMiOnRydWUsImNhbk1hbmFnZUFkbWlucyI6dHJ1ZX0sImlzQWN0aXZlIjp0cnVlLCJpYXQiOjE3NTg1NDE3NDAsImV4cCI6MTc1ODU0NTM0MH0.XouNQG1nuZyu9_qTKzs3pVjkofNOOr_EyyqkikmfAvY';
-      localStorage.setItem('token', token);
-      return { token };
-    }
 
   async register(credentials: RegisterCredentials) {
     const response = await fetch(`${BASE_URL}/register`, {

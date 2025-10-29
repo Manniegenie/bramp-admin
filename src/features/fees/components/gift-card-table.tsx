@@ -296,7 +296,6 @@ export const GiftDataTable: React.FC<GiftDataTableProps> = ({
         else if (parsed?.rates && Array.isArray(parsed.rates)) ratesPayload = parsed.rates;
         else throw new Error('JSON must be an array or { rates: [...] }');
       } catch (jsonErr) {
-        console.debug('JSON parse error', jsonErr);
         throw new Error('Failed to parse file as JSON. Provide a JSON array or object with "rates" array.');
       }
 
@@ -325,7 +324,6 @@ export const GiftDataTable: React.FC<GiftDataTableProps> = ({
 
         const errMsg = result.message ? `${result.message}${detailSummary ? `: ${detailSummary}` : ''}` : 'Bulk upload failed';
         toast.error(errMsg);
-        console.info('Bulk upload response details:', result.details || details);
         return;
       }
 

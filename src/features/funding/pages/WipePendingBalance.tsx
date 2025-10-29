@@ -73,7 +73,6 @@ export function WipePendingBalance() {
           const fresh = await fetchUserWallets(userEmail, selectedTokens);
           _setWalletData(fresh);
         } catch (err) {
-          console.warn('failed to refetch wallets', err);
         }
       }
       setConfirmOpen(false);
