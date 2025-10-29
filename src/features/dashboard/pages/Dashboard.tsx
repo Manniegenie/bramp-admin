@@ -107,6 +107,8 @@ export function Dashboard() {
           limit: 50
         })
 
+        console.log('Filter result:', result)
+
         if (result.success) {
           if (reset || page === 1) {
             setTransactions(result.data.transactions)
@@ -120,6 +122,8 @@ export function Dashboard() {
       } else {
         // Use regular transactions endpoint
         const result = await getRecentTransactions(page, 50)
+
+        console.log('Recent transactions result:', result)
 
         if (result.success) {
           if (reset || page === 1) {
@@ -532,6 +536,13 @@ export function Dashboard() {
           </div>
         ) : (
           <div ref={tableContainerRef} className="max-h-[600px] overflow-y-auto">
+            {/* Debug info */}
+            <div className="mb-4 p-2 bg-gray-100 text-xs">
+              <p>Transactions count: {transactions.length}</p>
+              <p>Loading: {transactionsLoading ? 'true' : 'false'}</p>
+              <p>Active filters: {activeFilterCount}</p>
+            </div>
+            
             <DataTable columns={columns} data={transactions} />
 
             {loadingMore && (
