@@ -1,5 +1,5 @@
 import axios from '@/core/services/axios';
-import type { UsersSummaryResponse, RemovePasswordResponse, FetchWalletsResponse, WipePendingResponse } from '@/features/users/types/userApi.types';
+import type { UsersSummaryResponse, RemovePasswordResponse, FetchWalletsResponse, WipePendingResponse, DeductBalanceResponse, CompleteUserSummaryResponse } from '@/features/users/types/userApi.types';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -48,7 +48,7 @@ export async function removePasswordPin(email: string) : Promise<RemovePasswordR
   return res.data as RemovePasswordResponse;
 }
 
-export async function fetchUserWallets(email: string, tokens: string[]) : Promise<FetchWalletsResponse> {
+export async function fetchUserWallets(email: string, tokens?: string[]) : Promise<FetchWalletsResponse> {
   const token = localStorage.getItem('token');
   const res = await axios.post(`${BASE_URL}/fetch-wallet/wallets/fetch`, { email, tokens }, {
     headers: {
@@ -68,6 +68,17 @@ export async function wipePendingBalance(email: string, currency: string) : Prom
     },
   });
   return res.data as WipePendingResponse;
+}
+
+export async function deductBalance(email: string, currency: string, amount: number) : Promise<DeductBalanceResponse> {
+  const token = localStorage.getItem('token');
+  const res = await axios.post(`${BASE_URL}/pending/deduct`, { email, currency, amount }, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token ? `Bearer ${token}` : undefined,
+    },
+  });
+  return res.data as DeductBalanceResponse;
 }
 
 export async function regenerateWalletsByPhone(phonenumber: string, tokens: string[], force = false) {
@@ -103,4 +114,70 @@ export async function statusByPhone(phonenumber: string) {
   return res.data;
 }
 
-export default { getUsersSummary, removePasswordPin, fetchUserWallets, wipePendingBalance };
+export async function getCompleteUserSummary(email: string): Promise<CompleteUserSummaryResponse> {
+  const token = localStorage.getItem('token');
+  const res = await axios.get(`${BASE_URL}/usermanagement/summary`, {
+    params: { email },
+    headers: {
+      Authorization: token ? `Bearer ${token}` : undefined,
+    },
+  });
+  return res.data as CompleteUserSummaryResponse;
+}
+
+export async function getUserTransactions(email: string) {
+  const token = localStorage.getItem('token');
+  const res = await axios.post(`${BASE_URL}/fetch/transactions-by-email`,
+    { email },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token ? `Bearer ${token}` : undefined,
+      },
+    }
+  );
+  return res.data;
+}
+
+export async function blockUser(email: string, reason?: string) {
+  const token = localStorage.getItem('token');
+  const res = await axios.post(`${BASE_URL}/blockuser/block`,
+    { email, reason },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token ? `Bearer ${token}` : undefined,
+      },
+    }
+  );
+  return res.data;
+}
+
+export async function unblockUser(email: string) {
+  const token = localStorage.getItem('token');
+  const res = await axios.post(`${BASE_URL}/blockuser/unblock`,
+    { email },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token ? `Bearer ${token}` : undefined,
+      },
+    }
+  );
+  return res.data;
+}
+
+export async function checkUserBlocked(email: string) {
+  const token = localStorage.getItem('token');
+  const res = await axios.get(`${BASE_URL}/blockuser/check`,
+    {
+      params: { email },
+      headers: {
+        Authorization: token ? `Bearer ${token}` : undefined,
+      },
+    }
+  );
+  return res.data;
+}
+
+export default { getUsersSummary, removePasswordPin, fetchUserWallets, wipePendingBalance, deductBalance, getCompleteUserSummary, getUserTransactions, blockUser, unblockUser, checkUserBlocked };

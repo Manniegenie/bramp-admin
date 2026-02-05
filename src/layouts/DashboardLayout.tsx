@@ -15,6 +15,12 @@ import {
   MenuIcon,
   ChevronRightIcon,
   MoreVertical,
+  BarChart3,
+  UserCheck,
+  CreditCard,
+  Zap,
+  Image as ImageIcon,
+  UserCog,
 } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -25,6 +31,7 @@ import type { RootState } from '@/core/store/store';
 import Logo from '../assets/img/logo.png';
 import { ProfileDropdown } from '@/components/ui/ProfileDropdown';
 import { Popover } from '@/components/ui/Popover';
+import type { FeatureAccess } from '@/core/types/auth.types';
 
 interface SubMenuItem {
   title: string;
@@ -36,6 +43,7 @@ interface NavItem {
   path: string;
   icon: React.ReactNode;
   sub_menu?: SubMenuItem[];
+  featureKey: keyof FeatureAccess;
 }
 
 const navItems: NavItem[] = [
@@ -43,41 +51,96 @@ const navItems: NavItem[] = [
     title: 'Dashboard',
     path: '/',
     icon: <LayoutDashboard className="w-5 h-5" />,
+    featureKey: 'dashboard',
+  },
+  {
+    title: 'Platform Stats',
+    path: '/platform-stats',
+    icon: <BarChart3 className="w-5 h-5" />,
+    featureKey: 'platformStats',
   },
   {
     title: 'User Management',
     path: '/users',
     icon: <Users className="w-5 h-5" />,
+    featureKey: 'userManagement',
+  },
+  {
+    title: 'KYC Review',
+    path: '/kyc',
+    icon: <UserCheck className="w-5 h-5" />,
+    featureKey: 'kycReview',
   },
   {
     title: 'Fees & Rates',
     path: '/fees-rates',
     icon: <Calculator className="w-5 h-5" />,
+    featureKey: 'feesAndRates',
     sub_menu: [
       { title: 'View all fees', path: '/fees-rates' },
-      { title: 'Gift card rates', path: '/fees-rates/gift-card-rates' },
-      { title: 'Price Calculator', path: '/fees-rates/price-calculator' },
+      { title: 'Crypto fee management', path: '/fees-rates/crypto-fees-management' },
+      { title: 'On-ramp management', path: '/fees-rates/onramp-management' },
+      { title: 'Off-ramp management', path: '/fees-rates/offramp-management' },
+      { title: 'Price markdown', path: '/fees-rates/price-markdown' },
+      { title: 'Price calculator', path: '/fees-rates/price-calculator' },
     ]
+  },
+  {
+    title: 'Gift Cards',
+    path: '/giftcards',
+    icon: <CreditCard className="w-5 h-5" />,
+    featureKey: 'giftCards',
+    sub_menu: [
+      { title: 'Gift card rates', path: '/fees-rates/gift-card-rates' },
+      { title: 'Review submissions', path: '/giftcards/submissions' },
+    ]
+  },
+  {
+    title: 'Push Notifications',
+    path: '/notifications',
+    icon: <Zap className="w-5 h-5" />,
+    featureKey: 'pushNotifications',
+    sub_menu: [
+      { title: 'Send Notifications', path: '/notifications' },
+      { title: 'Scheduled Notifications', path: '/scheduled-notifications' },
+      { title: 'Gift Card Notifications', path: '/scheduled-giftcard-notifications' },
+    ]
+  },
+  {
+    title: 'Banners',
+    path: '/banners',
+    icon: <ImageIcon className="w-5 h-5" />,
+    featureKey: 'banners',
   },
   {
     title: 'Funding & Balances',
     path: '/funding',
     icon: <Wallet className="w-5 h-5" />,
+    featureKey: 'fundingAndBalances',
   },
   {
     title: 'Security',
     path: '/security',
     icon: <Shield className="w-5 h-5" />,
+    featureKey: 'security',
   },
   {
     title: 'Audit & Monitoring',
     path: '/audit',
     icon: <LineChart className="w-5 h-5" />,
+    featureKey: 'auditAndMonitoring',
+  },
+  {
+    title: 'Admin Settings',
+    path: '/admin-settings',
+    icon: <UserCog className="w-5 h-5" />,
+    featureKey: 'adminSettings',
   },
   {
     title: 'Settings',
     path: '/settings',
     icon: <Settings className="w-5 h-5" />,
+    featureKey: 'settings',
   },
 ];
 
@@ -126,6 +189,22 @@ export function DashboardLayout() {
   const [isSidebarDropdownOpen, setIsSidebarDropdownOpen] = useState(false);
   const [isHeaderDropdownOpen, setIsHeaderDropdownOpen] = useState(false);
 
+  // Sidebar nav filtering by role
+  let filteredNavItems = navItems;
+  if (user?.role === 'moderator') {
+    filteredNavItems = navItems.filter(item =>
+      item.title === 'User Management' || item.title === 'KYC Review'
+    );
+  } else if (user?.role === 'admin') {
+    filteredNavItems = navItems.filter(item =>
+      item.title === 'KYC Review' ||
+      item.title === 'Fees & Rates' ||
+      item.title === 'Push Notifications' ||
+      item.title === 'Gift Cards' ||
+      item.title === 'Banners'
+    );
+  } // super_admin sees all
+
   const ctxValue = useMemo(() => ({ setTitle, setBreadcrumb }), [setTitle, setBreadcrumb]);
 
   return (
@@ -155,7 +234,7 @@ export function DashboardLayout() {
             </div>
 
           <nav className="p-4 space-y-2">
-            {navItems.map((item) =>{ 
+            {filteredNavItems.map((item) =>{
               const active = isNavItemActive(item);
               return item.sub_menu && item.sub_menu.length > 0 ? (
                 <Popover
