@@ -65,4 +65,91 @@ export interface WipePendingResponse {
   [key: string]: unknown;
 }
 
+export interface DeductBalanceResponse {
+  success: boolean;
+  message: string;
+  previousBalance: number;
+  deductedAmount: number;
+  newBalance: number;
+  currency: string;
+}
+
+export interface CompleteUserSummaryResponse {
+  success: boolean;
+  data: {
+    user: {
+      _id: string;
+      email: string;
+      username?: string;
+      firstname?: string;
+      lastname?: string;
+      phonenumber?: string;
+      avatarUrl?: string;
+      kycLevel?: number;
+      kycStatus?: string;
+      emailVerified?: boolean;
+      chatbotTransactionVerified?: boolean;
+      is2FAEnabled?: boolean;
+      is2FAVerified?: boolean;
+      bvnVerified?: boolean;
+      bankAccounts?: Array<{
+        accountName: string;
+        bankName: string;
+        bankCode: string;
+        accountNumber: string;
+        addedAt: string;
+        isVerified: boolean;
+        isActive: boolean;
+      }>;
+      createdAt?: string;
+      updatedAt?: string;
+      lastBalanceUpdate?: string;
+      portfolioLastUpdated?: string;
+      kyc?: {
+        level1?: {
+          status: string;
+          phoneVerified: boolean;
+          verifiedAt?: string;
+          rejectionReason?: string;
+        };
+        level2?: {
+          status: string;
+          emailVerified: boolean;
+          documentSubmitted: boolean;
+          documentType?: string;
+          documentNumber?: string;
+          submittedAt?: string;
+          approvedAt?: string;
+          rejectedAt?: string;
+          rejectionReason?: string;
+        };
+      };
+    };
+    wallets: Record<string, WalletEntry>;
+    balances: {
+      [key: string]: number | undefined;
+      btcBalance?: number;
+      btcPendingBalance?: number;
+      ethBalance?: number;
+      ethPendingBalance?: number;
+      solBalance?: number;
+      solPendingBalance?: number;
+      usdtBalance?: number;
+      usdtPendingBalance?: number;
+      usdcBalance?: number;
+      usdcPendingBalance?: number;
+      bnbBalance?: number;
+      bnbPendingBalance?: number;
+      maticBalance?: number;
+      maticPendingBalance?: number;
+      trxBalance?: number;
+      trxPendingBalance?: number;
+      ngnzBalance?: number;
+      ngnzPendingBalance?: number;
+      totalPortfolioBalance?: number;
+    };
+    lastUpdated?: string;
+  };
+}
+
 export type UserApiTypes = UserSummary | UsersSummaryResponse | RemovePasswordResponse;
