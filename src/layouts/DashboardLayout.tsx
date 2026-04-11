@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { DashboardTitleContext } from './DashboardTitleContext';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { usePermissions } from '@/core/hooks/usePermissions';
 import {
   LayoutDashboard,
   Users,
@@ -15,12 +16,15 @@ import {
   MenuIcon,
   ChevronRightIcon,
   MoreVertical,
-  BarChart3,
   UserCheck,
-  CreditCard,
   Zap,
-  Image as ImageIcon,
+  CreditCard,
   UserCog,
+  BarChart3,
+  Image as ImageIcon,
+  BookOpen,
+  PieChart,
+  TrendingUp,
 } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -36,6 +40,7 @@ import type { FeatureAccess } from '@/core/types/auth.types';
 interface SubMenuItem {
   title: string;
   path: string;
+  superAdminOnly?: boolean;
 }
 
 interface NavItem {
@@ -43,38 +48,38 @@ interface NavItem {
   path: string;
   icon: React.ReactNode;
   sub_menu?: SubMenuItem[];
-  featureKey: keyof FeatureAccess;
+  featureKey: keyof FeatureAccess; // Maps to permission key
 }
 
 const navItems: NavItem[] = [
   {
     title: 'Dashboard',
     path: '/',
-    icon: <LayoutDashboard className="w-5 h-5" />,
+    icon: <LayoutDashboard className="w-4 h-4" />,
     featureKey: 'dashboard',
   },
   {
     title: 'Platform Stats',
     path: '/platform-stats',
-    icon: <BarChart3 className="w-5 h-5" />,
+    icon: <BarChart3 className="w-4 h-4" />,
     featureKey: 'platformStats',
   },
   {
     title: 'User Management',
     path: '/users',
-    icon: <Users className="w-5 h-5" />,
+    icon: <Users className="w-4 h-4" />,
     featureKey: 'userManagement',
   },
   {
     title: 'KYC Review',
     path: '/kyc',
-    icon: <UserCheck className="w-5 h-5" />,
+    icon: <UserCheck className="w-4 h-4" />,
     featureKey: 'kycReview',
   },
   {
     title: 'Fees & Rates',
     path: '/fees-rates',
-    icon: <Calculator className="w-5 h-5" />,
+    icon: <Calculator className="w-4 h-4" />,
     featureKey: 'feesAndRates',
     sub_menu: [
       { title: 'View all fees', path: '/fees-rates' },
@@ -88,7 +93,7 @@ const navItems: NavItem[] = [
   {
     title: 'Gift Cards',
     path: '/giftcards',
-    icon: <CreditCard className="w-5 h-5" />,
+    icon: <CreditCard className="w-4 h-4" />,
     featureKey: 'giftCards',
     sub_menu: [
       { title: 'Gift card rates', path: '/fees-rates/gift-card-rates' },
@@ -98,7 +103,7 @@ const navItems: NavItem[] = [
   {
     title: 'Push Notifications',
     path: '/notifications',
-    icon: <Zap className="w-5 h-5" />,
+    icon: <Zap className="w-4 h-4" />,
     featureKey: 'pushNotifications',
     sub_menu: [
       { title: 'Send Notifications', path: '/notifications' },
@@ -109,37 +114,63 @@ const navItems: NavItem[] = [
   {
     title: 'Banners',
     path: '/banners',
-    icon: <ImageIcon className="w-5 h-5" />,
+    icon: <ImageIcon className="w-4 h-4" />,
     featureKey: 'banners',
+  },
+  {
+    title: 'Blog',
+    path: '/blog',
+    icon: <BookOpen className="w-4 h-4" />,
+    featureKey: 'blog',
+  },
+  {
+    title: 'Analytics',
+    path: '/analytics',
+    icon: <PieChart className="w-4 h-4" />,
+    featureKey: 'analytics',
+    sub_menu: [
+      { title: 'Top Traders', path: '/analytics/top-traders' },
+      { title: 'Token Volume', path: '/analytics/tokens' },
+    ],
+  },
+  {
+    title: 'Marketing Stats',
+    path: '/analytics/marketing',
+    icon: <TrendingUp className="w-4 h-4" />,
+    featureKey: 'marketingStats',
   },
   {
     title: 'Funding & Balances',
     path: '/funding',
-    icon: <Wallet className="w-5 h-5" />,
+    icon: <Wallet className="w-4 h-4" />,
     featureKey: 'fundingAndBalances',
   },
   {
     title: 'Security',
     path: '/security',
-    icon: <Shield className="w-5 h-5" />,
+    icon: <Shield className="w-4 h-4" />,
     featureKey: 'security',
   },
   {
     title: 'Audit & Monitoring',
     path: '/audit',
-    icon: <LineChart className="w-5 h-5" />,
+    icon: <LineChart className="w-4 h-4" />,
     featureKey: 'auditAndMonitoring',
+    sub_menu: [
+      { title: 'Monitoring', path: '/audit' },
+      { title: 'Audit Logs', path: '/audit/logs', superAdminOnly: true },
+    ],
   },
   {
     title: 'Admin Settings',
     path: '/admin-settings',
-    icon: <UserCog className="w-5 h-5" />,
+    icon: <UserCog className="w-4 h-4" />,
     featureKey: 'adminSettings',
   },
   {
     title: 'Settings',
     path: '/settings',
-    icon: <Settings className="w-5 h-5" />,
+    icon: <Settings className="w-4 h-4" />,
     featureKey: 'settings',
   },
 ];
@@ -148,6 +179,7 @@ export function DashboardLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const location = useLocation();
   const { user } = useSelector((state: RootState) => state.auth);
+  const { hasFeatureAccess } = usePermissions();
   const [title, setTitle] = useState(() => {
     const currentNavItem = navItems.find(item => location.pathname.startsWith(item.path));
     return currentNavItem ? currentNavItem.title : 'Dashboard';
@@ -189,41 +221,47 @@ export function DashboardLayout() {
   const [isSidebarDropdownOpen, setIsSidebarDropdownOpen] = useState(false);
   const [isHeaderDropdownOpen, setIsHeaderDropdownOpen] = useState(false);
 
-  // Sidebar nav filtering by role
-  let filteredNavItems = navItems;
-  if (user?.role === 'moderator') {
-    filteredNavItems = navItems.filter(item =>
-      item.title === 'User Management' || item.title === 'KYC Review'
-    );
-  } else if (user?.role === 'admin') {
-    filteredNavItems = navItems.filter(item =>
-      item.title === 'KYC Review' ||
-      item.title === 'Fees & Rates' ||
-      item.title === 'Push Notifications' ||
-      item.title === 'Gift Cards' ||
-      item.title === 'Banners'
-    );
-  } // super_admin sees all
+  // Sidebar nav filtering by permissions
+  const filteredNavItems = navItems.filter(item => {
+    // Super admins see all
+    if (user?.role === 'super_admin') {
+      return true;
+    }
+    // Check feature access based on permissions
+    const hasAccess = hasFeatureAccess(item.featureKey);
+    
+    // Debug logging for userManagement specifically
+    if (item.featureKey === 'userManagement') {
+      console.log('[DASHBOARD LAYOUT] User Management visibility check:', {
+        hasAccess,
+        role: user?.role,
+        featureKey: item.featureKey,
+        title: item.title
+      });
+    }
+    
+    return hasAccess;
+  });
 
   const ctxValue = useMemo(() => ({ setTitle, setBreadcrumb }), [setTitle, setBreadcrumb]);
 
   return (
     <DashboardTitleContext.Provider value={ctxValue}>
-      <div className="w-screen flex h-screen bg-white dark:bg-white text-gray-900 dark:text-gray-900">
+      <div className="w-screen flex min-h-screen bg-white dark:bg-white text-gray-900 dark:text-gray-900">
         {/* Sidebar */}
         <aside
-          className={`${isSidebarOpen ? 'w-64' : 'w-20'} h-screen bg-[#027338] shadow-lg transition-all duration-300 z-30 text-white flex flex-col justify-between`}
+          className={`${isSidebarOpen ? 'w-56' : 'w-16'} min-h-screen sticky top-0 bg-primary shadow-lg transition-all duration-300 z-30 text-white flex flex-col justify-between`}
         >
           <div>
-            <div className="flex items-center justify-between h-16 px-4">
-              <h1 className={`${!isSidebarOpen && 'hidden'} font-bold text-xl`}>
-                <img src={Logo} alt="Logo" className="h-12" />
+            <div className="flex items-center justify-between h-12 px-3">
+              <h1 className={`${!isSidebarOpen && 'hidden'} font-bold text-lg`}>
+                <img src={Logo} alt="Logo" className="h-6" />
               </h1>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={toggleSidebar}
-                className="hover:bg-gray-100"
+                className="text-white hover:bg-white/20"
               >
                 {isSidebarOpen ? (
                   <ChevronDown className="w-5 h-5 rotate-90" />
@@ -233,8 +271,8 @@ export function DashboardLayout() {
               </Button>
             </div>
 
-          <nav className="p-4 space-y-2">
-            {filteredNavItems.map((item) =>{
+          <nav className="p-3 space-y-1">
+            {filteredNavItems.map((item) => {
               const active = isNavItemActive(item);
               return item.sub_menu && item.sub_menu.length > 0 ? (
                 <Popover
@@ -243,29 +281,28 @@ export function DashboardLayout() {
                   position="right"
                   trigger={
                     <div
-                      className={`w-full flex items-center justify-between p-3 rounded-lg transition-colors ${
-                        active 
-                          ? 'bg-green-800 text-primary-foreground'
-                          : 'hover:bg-green-700 hover:text-white'
+                      className={`w-full flex items-center justify-between px-2.5 py-2 rounded-md transition-colors text-sm ${
+                        active
+                          ? 'bg-pupple-800 text-primary-foreground'
+                          : 'hover:bg-pupple-700 hover:text-white'
                       }`}
                     >
                       <div className="flex items-center">
                         {item.icon}
-                        <span className={`${!isSidebarOpen && 'hidden'} ml-3`}>
+                        <span className={`${!isSidebarOpen && 'hidden'} ml-2.5`}>
                           {item.title}
                         </span>
                       </div>
-                      <ChevronRightIcon className="w-4 h-4 ml-2" />
+                      <ChevronRightIcon className="w-3.5 h-3.5 ml-1.5" />
                     </div>
                   }
                   content={
                     <div className="p-1 rounded-none shadow-none">
-                      {/* <div className="font-semibold text-lg mb-2">{item.title}</div> */}
-                      {item.sub_menu.map((sub) => (
+                      {item.sub_menu.filter(sub => !sub.superAdminOnly || user?.role === 'super_admin').map((sub) => (
                         <Link
                           key={sub.path}
                           to={sub.path}
-                          className="block hover:bg-gray-100 px-2 py-2.5 border-b border-gray-100 cursor-pointer"
+                          className="block hover:bg-gray-100 px-2 py-2 border-b border-gray-100 cursor-pointer text-sm"
                         >
                           {sub.title}
                         </Link>
@@ -276,18 +313,18 @@ export function DashboardLayout() {
               ) : (
                 <div key={item.path}>
                   {item.title === 'Settings' && (
-                    <hr className="my-2 border-t border-black/20" />
+                    <hr className="my-1.5 border-t border-black/20" />
                   )}
                   <Link
                     to={item.path}
-                    className={`flex items-center p-3 rounded-lg transition-colors ${
+                    className={`flex items-center px-2.5 py-2 rounded-md transition-colors text-sm ${
                       location.pathname === item.path
-                        ? 'bg-green-800 text-primary-foreground'
-                        : 'hover:bg-green-700 hover:text-white'
+                        ? 'bg-black/50 text-primary-foreground'
+                        : 'hover:bg-black/40 hover:text-white'
                     }`}
                   >
                     {item.icon}
-                    <span className={`${!isSidebarOpen && 'hidden'} ml-3`}>
+                    <span className={`${!isSidebarOpen && 'hidden'} ml-2.5`}>
                       {item.title}
                     </span>
                   </Link>
@@ -296,7 +333,7 @@ export function DashboardLayout() {
           })}
           </nav>
             </div>
-          <div className="relative space-y-2 p-4">
+          <div className="relative space-y-1.5 p-3">
             <ProfileDropdown
               user={{
                 name: user?.name && user?.name.trim() !== '' ? user.name : user?.adminName || '',
@@ -317,38 +354,38 @@ export function DashboardLayout() {
 
         {/* Main Content */}
         <main
-          className={`w-full flex-1 transition-all duration-300 flex flex-col overflow-hidden`}
+          className={`w-full flex-1 transition-all duration-300 flex flex-col min-h-screen`}
         >
           {/* Header */}
-          <header className="h-auto bg-transparent w-full z-20 flex items-center justify-end px-6 py-4">
+          <header className="h-auto bg-transparent w-full z-20 flex items-center justify-end px-4 py-2.5">
             <Button
-              variant="secondary"
+              variant="ghost"
               size="icon"
               className="lg:hidden"
               onClick={toggleSidebar}
             >
               {isSidebarOpen ? (
-                <XIcon className="w-5 h-5 text-black" />
+                <XIcon className="w-4 h-4" />
               ) : (
-                <MenuIcon className="w-5 h-5 text-black" />
+                <MenuIcon className="w-4 h-4" />
               )}
             </Button>
-            <div className='w-full flex justify-between items-end px-4'>
+            <div className='w-full flex justify-between items-end px-3'>
               <div className='w-fit flex flex-col items-start justify-start'>
                 {/* Breadcrumbs (not shown on dashboard) */}
                 {location.pathname !== '/dashboard' && breadcrumb.length > 0 && (
-                  <nav className="flex text-[13px] text-[#475467] items-center space-x-2 mb-2">
+                  <nav className="flex text-xs text-[#475467] items-center space-x-1.5 mb-1">
                     {breadcrumb.map((crumb, idx) => (
                       <span key={idx} className="flex items-center">
                         {crumb}
                         {idx < breadcrumb.length - 1 && (
-                          <ChevronRightIcon className="mx-2 w-4 h-4 text-gray-400" />
+                          <ChevronRightIcon className="mx-1.5 w-3.5 h-3.5 text-gray-400" />
                         )}
                       </span>
                     ))}
                   </nav>
                 )}
-                <h1 className="text-[24px] font-medium text-[#2B2B2B]">{title}</h1>
+                <h1 className="text-lg font-medium text-[#2B2B2B]">{title}</h1>
               </div>
               <ProfileDropdown
                 user={{
@@ -368,7 +405,7 @@ export function DashboardLayout() {
           </header>
 
           {/* Page Content */}
-          <div className="w-full flex-1 overflow-y-auto p-4 mt-4">
+          <div className="w-full flex-1 p-3 mt-2 pb-6">
             <Outlet />
           </div>
         </main>

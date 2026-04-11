@@ -5,17 +5,18 @@ import type { FeatureAccess } from '@/core/types/auth.types';
 import { setFeatureAccess } from '@/features/auth/store/auth.slice';
 import axios from '@/core/services/axios';
 
-const BASE_URL = import.meta.env.VITE_BASE_URL;
-
 // Default feature access for when permissions haven't been loaded yet
 const defaultFeatureAccess: FeatureAccess = {
   dashboard: true,
   platformStats: false,
+  analytics: false,
+  marketingStats: false,
   userManagement: false,
   kycReview: false,
   feesAndRates: false,
   giftCards: false,
   banners: false,
+  blog: true,
   fundingAndBalances: false,
   pushNotifications: false,
   security: false,
@@ -30,6 +31,12 @@ const defaultFeatureAccess: FeatureAccess = {
   canManageKYC: false,
   canAccessReports: false,
   canManageAdmins: false,
+  canManagePushNotifications: false,
+  canManageUsers: false,
+  canManageGiftcards: false,
+  canManageBanners: false,
+  canRemoveFunding: false,
+  canManageBalances: false,
 };
 
 export function usePermissions() {
@@ -40,13 +47,15 @@ export function usePermissions() {
     if (!token) return;
 
     try {
-      const response = await axios.get(`${BASE_URL}/admin/permissions`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get('/admin/permissions');
 
       if (response.data.success) {
+        console.log('[PERMISSIONS] Fetched from API:', {
+          userManagement: response.data.data.featureAccess.userManagement,
+          canManageUsers: response.data.data.featureAccess.canManageUsers,
+          role: response.data.data.role,
+          allFeatureAccess: response.data.data.featureAccess
+        });
         dispatch(setFeatureAccess(response.data.data.featureAccess));
       }
     } catch (error) {
@@ -56,11 +65,14 @@ export function usePermissions() {
         const superAdminAccess: FeatureAccess = {
           dashboard: true,
           platformStats: true,
+          analytics: true,
+          marketingStats: true,
           userManagement: true,
           kycReview: true,
           feesAndRates: true,
           giftCards: true,
           banners: true,
+          blog: true,
           fundingAndBalances: true,
           pushNotifications: true,
           security: true,
@@ -75,24 +87,111 @@ export function usePermissions() {
           canManageKYC: true,
           canAccessReports: true,
           canManageAdmins: true,
+          canManagePushNotifications: true,
+          canManageUsers: true,
+          canManageGiftcards: true,
+          canManageBanners: true,
+          canRemoveFunding: true,
+          canManageBalances: true,
         };
         dispatch(setFeatureAccess(superAdminAccess));
+      } else if (user?.role === 'admin') {
+        // Fallback for admin role - only push notifications, user management, banners, giftcards
+        const adminAccess: FeatureAccess = {
+          dashboard: true,
+          platformStats: false,
+          analytics: false,
+          marketingStats: false,
+          userManagement: true,
+          kycReview: true,
+          feesAndRates: false,
+          giftCards: true,
+          banners: true,
+          blog: true,
+          fundingAndBalances: false,
+          pushNotifications: true,
+          security: false,
+          auditAndMonitoring: false,
+          adminSettings: false,
+          settings: true,
+          canDeleteUsers: false,
+          canManageWallets: false,
+          canManageFees: false,
+          canViewTransactions: false,
+          canFundUsers: false,
+          canManageKYC: true,
+          canAccessReports: false,
+          canManageAdmins: false,
+          canManagePushNotifications: true,
+          canManageUsers: true,
+          canManageGiftcards: true,
+          canManageBanners: true,
+          canRemoveFunding: false,
+          canManageBalances: false,
+        };
+        dispatch(setFeatureAccess(adminAccess));
       }
     }
   }, [token, dispatch, user?.role]);
 
   useEffect(() => {
-    if (token && !featureAccess) {
+    if (token) {
+      // Always fetch permissions on mount or when token changes
+      // This ensures permissions are fresh and up-to-date
       fetchPermissions();
     }
-  }, [token, featureAccess, fetchPermissions]);
+  }, [token, fetchPermissions]);
 
   const hasFeatureAccess = useCallback(
     (feature: keyof FeatureAccess): boolean => {
-      if (!featureAccess) return defaultFeatureAccess[feature];
-      return featureAccess[feature] ?? false;
+      // Super admins always have access
+      if (user?.role === 'super_admin') {
+        return true;
+      }
+      
+      // If permissions haven't loaded yet, use defaults
+      if (!featureAccess) {
+        // For admin role, grant only specific features as fallback
+        if (user?.role === 'admin') {
+          const adminOnlyFeatures: (keyof FeatureAccess)[] = [
+            'dashboard',
+            'userManagement',
+            'kycReview',
+            'giftCards',
+            'banners',
+            'blog',
+            'pushNotifications',
+            'settings',
+            'canManageUsers',
+            'canManageKYC',
+            'canManageGiftcards',
+            'canManageBanners',
+            'canManagePushNotifications'
+          ];
+          if (adminOnlyFeatures.includes(feature)) {
+            return true;
+          }
+          return false;
+        }
+        return defaultFeatureAccess[feature];
+      }
+      
+      // Check the feature access
+      const hasAccess = featureAccess[feature] ?? false;
+      
+      // Debug logging for userManagement specifically
+      if (feature === 'userManagement') {
+        console.log('[PERMISSIONS] userManagement check:', {
+          hasAccess,
+          featureAccess: featureAccess.userManagement,
+          role: user?.role,
+          canManageUsers: featureAccess.canManageUsers
+        });
+      }
+      
+      return hasAccess;
     },
-    [featureAccess]
+    [featureAccess, user?.role]
   );
 
   const hasPermission = useCallback(

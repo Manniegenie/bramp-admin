@@ -10,7 +10,10 @@ import {
   Loader2,
   MinusCircle,
   Trash2,
-  Ban
+  Ban,
+  LockOpen,
+  KeyRound,
+  ShieldOff
 } from 'lucide-react';
 import type { User } from '../types/user';
 
@@ -69,6 +72,30 @@ export function UserActions() {
           path: '/user-management/remove-password',
           color: 'text-red-600',
           bgColor: 'bg-red-50'
+        },
+        {
+          icon: KeyRound,
+          label: 'Reset PIN',
+          description: 'Clear PIN so user can set a new one via the app',
+          path: '/user-management/reset-pin',
+          color: 'text-yellow-600',
+          bgColor: 'bg-yellow-50'
+        },
+        {
+          icon: LockOpen,
+          label: 'Unlock PIN Account',
+          description: 'Clear PIN lock after too many failed attempts',
+          path: '/user-management/unlock-pin',
+          color: 'text-green-600',
+          bgColor: 'bg-green-50'
+        },
+        {
+          icon: ShieldOff,
+          label: 'Unlock 2FA Lock',
+          description: 'Clear 2FA rate-limit lock after too many failed attempts',
+          path: '/user-management/unlock-2fa',
+          color: 'text-blue-600',
+          bgColor: 'bg-blue-50'
         }
       ]
     },
@@ -274,6 +301,18 @@ export function UserActions() {
               <div className="grid grid-cols-[120px_1fr] gap-4">
                 <span className="text-green-600 font-semibold">POST</span>
                 <span>/blockuser/unblock</span>
+              </div>
+              <div className="grid grid-cols-[120px_1fr] gap-4">
+                <span className="text-green-600 font-semibold">POST</span>
+                <span>/usermanagement/users/reset-pin</span>
+              </div>
+              <div className="grid grid-cols-[120px_1fr] gap-4">
+                <span className="text-green-600 font-semibold">POST</span>
+                <span>/usermanagement/users/:userId/unlock-pin</span>
+              </div>
+              <div className="grid grid-cols-[120px_1fr] gap-4">
+                <span className="text-blue-600 font-semibold">POST</span>
+                <span>/usermanagement/users/:userId/unlock-2fa</span>
               </div>
               <div className="grid grid-cols-[120px_1fr] gap-4">
                 <span className="text-red-600 font-semibold">DELETE</span>

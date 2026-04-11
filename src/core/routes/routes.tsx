@@ -17,21 +17,23 @@ import { AddCryptoFee } from '@/features/fees/pages/AddCryptoFee';
 import { FundingAndBalances } from '@/features/funding/pages/FundingAndBalances';
 import { Security } from '@/features/security/pages/Security';
 import { AuditAndMonitoring } from '@/features/audit/pages/AuditAndMonitoring';
+import { AuditLogs } from '@/features/audit/pages/AuditLogs';
 import { Settings } from '@/features/settings/pages/Settings';
 import { Disable2Fa } from '@/features/users/pages/Disable2Fa';
 import { RemovePassword } from '@/features/users/pages/RemovePassword';
 import { UserWallet } from '@/features/funding/pages/UserWallet';
 import { GiftCardRates } from '@/features/giftcard/pages/GiftCardRates';
-import { NgnMarkup } from '@/features/fees/pages/NgnMarkup';
 import { PriceCalculator } from '@/features/fees/pages/PriceCalculator';
 import { CreateNewAdmin } from '@/features/users/pages/CreateNewAdmin';
-import { WipePendingBalance } from '@/features/funding/pages/WipePendingBalance';
 import { DeductBalance } from '@/features/funding/pages/DeductBalance';
 import { WalletGenerateByPhone } from '@/features/users/pages/WalletGenerateByPhone';
 import { RegenerateWalletByPhone } from '@/features/users/pages/RegenerateWalletByPhone';
 import { Summary } from '@/features/users/pages/Summary';
 import { UserActions } from '@/features/users/pages/UserActions';
 import { BlockUser } from '@/features/users/pages/BlockUser';
+import { UnlockPin } from '@/features/users/pages/UnlockPin';
+import { Unlock2FA } from '@/features/users/pages/Unlock2FA';
+import { ResetUserPin } from '@/features/users/pages/ResetUserPin';
 import { KYCReview } from '@/features/kyc/pages/KYCReview';
 import { KYCDetail } from '@/features/kyc/pages/KYCDetail';
 import { NotificationsManagement } from '@/features/notifications/pages/NotificationsManagement';
@@ -45,6 +47,12 @@ import { GiftCardSubmissionDetail } from '@/features/giftcard/pages/GiftCardSubm
 import { AdminSettings } from '@/features/admin-settings/pages/AdminSettings';
 import { Admin2FASetup } from '@/features/admin-settings/pages/Admin2FASetup';
 import { BannerManagement } from '@/features/banners/pages/BannerManagement';
+import { BlogManagement } from '@/features/blog/pages/BlogManagement';
+import { AnalyticsPlatformStats } from '@/features/analytics/pages/AnalyticsPlatformStats';
+import { MarketingStats } from '@/features/analytics/pages/MarketingStats';
+import { TopTraders } from '@/features/analytics/pages/TopTraders';
+import { TokenVolume } from '@/features/analytics/pages/TokenVolume';
+import { TransactionDetail } from '@/features/dashboard/pages/TransactionDetail';
 
 export const router = createBrowserRouter([
   {
@@ -100,10 +108,6 @@ export const router = createBrowserRouter([
             element: <UserWallet />,
           },
           {
-            path: 'user-management/wipe-pending-balance',
-            element: <WipePendingBalance />,
-          },
-          {
             path: 'user-management/deduct-balance',
             element: <DeductBalance />,
           },
@@ -122,6 +126,18 @@ export const router = createBrowserRouter([
           {
             path: 'user-management/block-user',
             element: <BlockUser />,
+          },
+          {
+            path: 'user-management/unlock-pin',
+            element: <UnlockPin />,
+          },
+          {
+            path: 'user-management/unlock-2fa',
+            element: <Unlock2FA />,
+          },
+          {
+            path: 'user-management/reset-pin',
+            element: <ResetUserPin />,
           },
           {
             path: 'fees-rates',
@@ -146,10 +162,6 @@ export const router = createBrowserRouter([
           {
             path: 'giftcards/submissions/:submissionId',
             element: <GiftCardSubmissionDetail />,
-          },
-          {
-            path: 'fees-rates/ngn-markup',
-            element: <NgnMarkup />,
           },
           {
             path: 'fees-rates/onramp-management',
@@ -200,6 +212,10 @@ export const router = createBrowserRouter([
             element: <AuditAndMonitoring />,
           },
           {
+            path: 'audit/logs',
+            element: <AuditLogs />,
+          },
+          {
             path: 'notifications',
             element: <NotificationsManagement />,
           },
@@ -216,12 +232,36 @@ export const router = createBrowserRouter([
             element: <BannerManagement />,
           },
           {
+            path: 'blog',
+            element: <BlogManagement />,
+          },
+          {
+            path: 'analytics/platform-stats',
+            element: <AnalyticsPlatformStats />,
+          },
+          {
+            path: 'analytics/marketing',
+            element: <MarketingStats />,
+          },
+          {
+            path: 'analytics/top-traders',
+            element: <TopTraders />,
+          },
+          {
+            path: 'analytics/tokens',
+            element: <TokenVolume />,
+          },
+          {
             path: 'admin-settings',
             element: <AdminSettings />,
           },
           {
             path: 'settings',
             element: <Settings />,
+          },
+          {
+            path: 'transaction/:transactionId',
+            element: <TransactionDetail />,
           },
         ],
       },

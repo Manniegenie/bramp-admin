@@ -1,5 +1,5 @@
 import axios from '@/core/services/axios';
-import type { UsersSummaryResponse, RemovePasswordResponse, FetchWalletsResponse, WipePendingResponse, DeductBalanceResponse, CompleteUserSummaryResponse } from '@/features/users/types/userApi.types';
+import type { UsersSummaryResponse, RemovePasswordResponse, FetchWalletsResponse, DeductBalanceResponse, CompleteUserSummaryResponse } from '@/features/users/types/userApi.types';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -37,6 +37,14 @@ export async function deleteUser(email: string) : Promise<{ success: boolean; me
   return res.data;
 }
 
+export async function resetUserPin(email: string) {
+  const token = localStorage.getItem('token');
+  const res = await axios.post(`${import.meta.env.VITE_BASE_URL}/usermanagement/users/reset-pin`, { email }, {
+    headers: { Authorization: token ? `Bearer ${token}` : undefined },
+  });
+  return res.data;
+}
+
 export async function removePasswordPin(email: string) : Promise<RemovePasswordResponse> {
   const token = localStorage.getItem('token');
   const res = await axios.patch(`${BASE_URL}/delete-pin/remove-passwordpin`, { email }, {
@@ -48,26 +56,17 @@ export async function removePasswordPin(email: string) : Promise<RemovePasswordR
   return res.data as RemovePasswordResponse;
 }
 
-export async function fetchUserWallets(email: string, tokens?: string[]) : Promise<FetchWalletsResponse> {
+export async function fetchUserWallets(email: string) : Promise<FetchWalletsResponse> {
   const token = localStorage.getItem('token');
-  const res = await axios.post(`${BASE_URL}/fetch-wallet/wallets/fetch`, { email, tokens }, {
+  // For now, let's use a simpler approach that matches your backend pattern
+  // You'll need to create this endpoint on your backend: GET /admin/users/wallets?email=user@example.com
+  const res = await axios.get(`${BASE_URL}/admin/users/wallets`, {
+    params: { email },
     headers: {
-      'Content-Type': 'application/json',
       Authorization: token ? `Bearer ${token}` : undefined,
     },
   });
   return res.data as FetchWalletsResponse;
-}
-
-export async function wipePendingBalance(email: string, currency: string) : Promise<WipePendingResponse> {
-  const token = localStorage.getItem('token');
-  const res = await axios.post(`${BASE_URL}/pending/wipe`, { email, currency }, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: token ? `Bearer ${token}` : undefined,
-    },
-  });
-  return res.data as WipePendingResponse;
 }
 
 export async function deductBalance(email: string, currency: string, amount: number) : Promise<DeductBalanceResponse> {
@@ -177,6 +176,17 @@ export async function checkUserBlocked(email: string) {
       },
     }
   );
+  return res.data;
+}
+
+export async function wipePendingBalance(email: string, currency: string) {
+  const token = localStorage.getItem('token');
+  const res = await axios.post(`${BASE_URL}/pending/wipe`, { email, currency }, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: token ? `Bearer ${token}` : undefined,
+    },
+  });
   return res.data;
 }
 
