@@ -23,6 +23,9 @@ export interface FeatureAccess {
   auditAndMonitoring: boolean;
   adminSettings: boolean;
   settings: boolean;
+  blog: boolean;
+  analytics: boolean;
+  marketingStats: boolean;
   canDeleteUsers: boolean;
   canManageWallets: boolean;
   canManageFees: boolean;

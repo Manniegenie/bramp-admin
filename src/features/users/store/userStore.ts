@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { User } from '../types/user';
-import { getAllUsers } from '../services/userService';
+import { getUsers } from '../services/usersService';
 
 export const useUserStore = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -10,13 +10,13 @@ export const useUserStore = () => {
 
   useEffect(() => {
     setLoading(true);
-    getAllUsers()
-      .then((res) => {
-        setUsers(res.data.users);
-        setTotal(res.data.total);
+    getUsers()
+      .then((res: import('../types/user').GetUsersResponse) => {
+        setUsers(res.data?.users ?? []);
+        setTotal(res.data?.pagination?.total ?? 0);
         setError(null);
       })
-      .catch((err) => {
+      .catch((err: Error) => {
         setError(err.message || 'Failed to fetch users');
       })
       .finally(() => {

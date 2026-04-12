@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { searchUsers } from '../store/userStore';
+import { searchUsers } from '../store/usersSlice';
 import type { RootState } from '@/core/store/store';
 import type { AppDispatch } from '@/core/store/store';
 

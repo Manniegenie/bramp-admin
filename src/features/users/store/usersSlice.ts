@@ -66,4 +66,6 @@ const usersSlice = createSlice({
   },
 });
 
+export const searchUsers = fetchUsers;
+
 export default usersSlice.reducer;
