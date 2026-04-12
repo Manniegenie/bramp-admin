@@ -34,6 +34,12 @@ export interface FeatureAccess {
   canManageKYC: boolean;
   canAccessReports: boolean;
   canManageAdmins: boolean;
+  canManagePushNotifications: boolean;
+  canManageUsers: boolean;
+  canManageGiftcards: boolean;
+  canManageBanners: boolean;
+  canRemoveFunding: boolean;
+  canManageBalances: boolean;
 }
 
 export interface User {

@@ -193,7 +193,7 @@ export function Admin2FASetup() {
 
               <Button
                 type="submit"
-                size="xl"
+                size="lg"
                 className="w-full"
                 disabled={loading}
               >
@@ -264,7 +264,7 @@ export function Admin2FASetup() {
                   <Button
                     type="button"
                     variant="outline"
-                    size="xl"
+                    size="lg"
                     onClick={() => {
                       setStep('setup');
                       setQrCodeUrl('');
@@ -277,7 +277,7 @@ export function Admin2FASetup() {
                   </Button>
                   <Button
                     type="submit"
-                    size="xl"
+                    size="lg"
                     className="flex-1"
                     disabled={loading}
                   >
