@@ -212,11 +212,9 @@ export function Admin2FASetup() {
                     <img
                       src={qrCodeUrl}
                       alt="2FA QR Code"
-                      className="max-w-[200px] max-h-[200px] w-auto h-auto"
-                      style={{
-                        imageRendering: 'pixelated',
-                        display: 'block'
-                      }}
+                      width={260}
+                      height={260}
+                      style={{ display: 'block', imageRendering: 'crisp-edges' }}
                     />
                   </div>
                 )}
