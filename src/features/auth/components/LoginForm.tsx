@@ -26,8 +26,14 @@ export function LoginForm() {
     e.preventDefault();
     setLoading(true);
     try {
-      await dispatch(login(formData)).unwrap();
-      navigate('/');
+      const result = await dispatch(login(formData)).unwrap();
+      if (result.requires2FASetup) {
+        navigate('/admin-2fa-setup');
+      } else if (result.requires2FA) {
+        navigate('/admin-2fa-setup');
+      } else {
+        navigate('/');
+      }
     } catch (error) {
       console.error('Login failed:', error);
     } finally {
