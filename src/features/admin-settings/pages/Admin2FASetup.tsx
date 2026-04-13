@@ -193,8 +193,7 @@ export function Admin2FASetup() {
 
               <Button
                 type="submit"
-                size="lg"
-                className="w-full"
+                className="w-full h-12"
                 disabled={loading}
               >
                 {loading ? 'Setting up...' : 'Setup 2FA'}
@@ -212,9 +211,7 @@ export function Admin2FASetup() {
                     <img
                       src={qrCodeUrl}
                       alt="2FA QR Code"
-                      width={260}
-                      height={260}
-                      style={{ display: 'block', imageRendering: 'crisp-edges' }}
+                      className="w-[260px] h-[260px]"
                     />
                   </div>
                 )}
@@ -262,21 +259,19 @@ export function Admin2FASetup() {
                   <Button
                     type="button"
                     variant="outline"
-                    size="lg"
+                    className="flex-1 h-12"
                     onClick={() => {
                       setStep('setup');
                       setQrCodeUrl('');
                       setManualKey('');
                       setVerificationToken('');
                     }}
-                    className="flex-1"
                   >
                     Back
                   </Button>
                   <Button
                     type="submit"
-                    size="lg"
-                    className="flex-1"
+                    className="flex-1 h-12"
                     disabled={loading}
                   >
                     {loading ? 'Verifying...' : 'Verify & Enable 2FA'}
