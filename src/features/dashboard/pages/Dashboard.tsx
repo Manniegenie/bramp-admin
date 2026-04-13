@@ -439,78 +439,66 @@ export function Dashboard() {
         )}
       </div>
 
-      {/* Dashboard Cards */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {/* Dashboard Cards - Row 1 */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="p-6 bg-primary rounded-lg text-white relative overflow-hidden">
           <img src={CardBg} className='object-fit absolute left-0 top-0' alt='Logo' />
-          <div className="flex flex-col items-start gap-3 space-x-4">
+          <div className="flex flex-col items-start gap-3">
             <p className="text-sm text-white font-semibold">Total Users</p>
-            <h3 className="text-[30px] font-bold">{loading ? '...' : analytics?.data?.users?.total ?? total}</h3>
-          </div>
-        </Card>
-
-
-        <Card className="p-6 rounded-lg border-gray-200 shadow-none">
-          <div className="flex flex-col items-start gap-3 space-x-4">
-            <p className="text-sm text-gray-500 font-semibold">Chatbot Transactions</p>
-            <h3 className="text-2xl font-bold">{loading ? '...' : analytics?.data?.chatbotTransactions?.total ?? '—'}</h3>
+            <h3 className="text-[28px] font-bold">{loading ? '...' : analytics?.data?.users?.total ?? total}</h3>
           </div>
         </Card>
 
         <Card className="p-6 rounded-lg border-gray-200 shadow-none">
-          <div className="flex flex-col items-start gap-3 space-x-4">
-            <p className="text-sm text-gray-500 font-semibold">Transaction Volume</p>
-            <h3 className="text-2xl font-bold">
-              {loading ? '...' : formatCurrency(analytics?.data?.transactionVolume)}
-            </h3>
+          <div className="flex flex-col items-start gap-3">
+            <p className="text-sm text-gray-500 font-semibold">Total Trades</p>
+            <h3 className="text-2xl font-bold">{loading ? '...' : analytics?.data?.totalTrades ?? '—'}</h3>
+          </div>
+        </Card>
+
+        <Card className="p-6 rounded-lg border-gray-200 shadow-none">
+          <div className="flex flex-col items-start gap-3">
+            <p className="text-sm text-gray-500 font-semibold">Pending Trades</p>
+            <h3 className="text-2xl font-bold">{loading ? '...' : analytics?.data?.chatbotTrades?.overview?.pending ?? '—'}</h3>
+          </div>
+        </Card>
+
+        <Card className="p-6 rounded-lg border-gray-200 shadow-none">
+          <div className="flex flex-col items-start gap-3">
+            <p className="text-sm text-gray-500 font-semibold">Completed Trades</p>
+            <h3 className="text-2xl font-bold">{loading ? '...' : analytics?.data?.chatbotTrades?.overview?.completed ?? '—'}</h3>
           </div>
         </Card>
       </div>
 
-      {/* Chatbot Transaction Metrics */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-6">
+      {/* Dashboard Cards - Row 2: Volumes */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card className="p-6 rounded-lg border-gray-200 shadow-none">
-          <div className="flex flex-col items-start gap-3 space-x-4">
-            <p className="text-sm text-gray-500 font-semibold">Sell Transactions</p>
-            <h3 className="text-2xl font-bold">{loading ? '...' : analytics?.data?.chatbotTransactions?.sell ?? '—'}</h3>
-          </div>
-        </Card>
-
-        <Card className="p-6 rounded-lg border-gray-200 shadow-none">
-          <div className="flex flex-col items-start gap-3 space-x-4">
-            <p className="text-sm text-gray-500 font-semibold">Completed</p>
-            <h3 className="text-2xl font-bold">{loading ? '...' : analytics?.data?.chatbotTransactions?.completed ?? '—'}</h3>
-          </div>
-        </Card>
-
-        <Card className="p-6 rounded-lg border-gray-200 shadow-none">
-          <div className="flex flex-col items-start gap-3 space-x-4">
-            <p className="text-sm text-gray-500 font-semibold">Pending</p>
-            <h3 className="text-2xl font-bold">{loading ? '...' : analytics?.data?.chatbotTransactions?.pending ?? '—'}</h3>
-          </div>
-        </Card>
-
-        <Card className="p-6 rounded-lg border-gray-200 shadow-none">
-          <div className="flex flex-col items-start gap-3 space-x-4">
-            <p className="text-sm text-gray-500 font-semibold">Expired</p>
-            <h3 className="text-2xl font-bold">{loading ? '...' : analytics?.data?.chatbotTransactions?.expired ?? '—'}</h3>
-          </div>
-        </Card>
-
-        <Card className="p-6 rounded-lg border-gray-200 shadow-none">
-          <div className="flex flex-col items-start gap-3 space-x-4">
-            <p className="text-sm text-gray-500 font-semibold">Sell Volume</p>
+          <div className="flex flex-col items-start gap-3">
+            <p className="text-sm text-gray-500 font-semibold">Trade Volume (NGN)</p>
+            <p className="text-xs text-gray-400">NGN auto-converted for customers</p>
             <h3 className="text-2xl font-bold">
-              {loading ? '...' : formatCurrency(analytics?.data?.chatbotTransactions?.volume?.totalSellVolume)}
+              {loading ? '...' : `₦${(analytics?.data?.tradeVolumeNGN ?? 0).toLocaleString('en-NG', { maximumFractionDigits: 0 })}`}
             </h3>
           </div>
         </Card>
 
         <Card className="p-6 rounded-lg border-gray-200 shadow-none">
-          <div className="flex flex-col items-start gap-3 space-x-4">
-            <p className="text-sm text-gray-500 font-semibold">Actual Receive Volume</p>
+          <div className="flex flex-col items-start gap-3">
+            <p className="text-sm text-gray-500 font-semibold">Deposit Volume (USD)</p>
+            <p className="text-xs text-gray-400">Successful deposits, all currencies</p>
             <h3 className="text-2xl font-bold">
-              {loading ? '...' : formatCurrency(analytics?.data?.chatbotTransactions?.volume?.totalActualReceiveVolume)}
+              {loading ? '...' : formatCurrency(analytics?.data?.depositVolume)}
+            </h3>
+          </div>
+        </Card>
+
+        <Card className="p-6 rounded-lg border-gray-200 shadow-none">
+          <div className="flex flex-col items-start gap-3">
+            <p className="text-sm text-gray-500 font-semibold">Withdrawal Volume (NGN)</p>
+            <p className="text-xs text-gray-400">Total NGNB withdrawn to bank</p>
+            <h3 className="text-2xl font-bold">
+              {loading ? '...' : `₦${(analytics?.data?.ngnzWithdrawals?.totalBankAmount ?? 0).toLocaleString('en-NG', { maximumFractionDigits: 0 })}`}
             </h3>
           </div>
         </Card>

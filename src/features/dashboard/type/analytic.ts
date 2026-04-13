@@ -138,6 +138,10 @@ export interface DashboardAnalyticsData {
   transactionVolume: number
   transactionVolumeBreakdown?: Record<string, CurrencyBreakdown>
   transactionVolumeCounts?: TransactionVolumeCounts
+  depositVolume: number
+  depositVolumeBreakdown?: Record<string, CurrencyBreakdown>
+  tradeVolumeNGN: number
+  totalTrades: number
 }
 
 export interface DashboardAnalyticsResponse {
