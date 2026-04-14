@@ -284,8 +284,8 @@ export function Dashboard() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                 >
                   <option value="">All Types</option>
-                  <option value="SELL">Sell</option>
-                  <option value="BUY">Buy</option>
+                  <option value="DEPOSIT">Deposit</option>
+                  <option value="WITHDRAWAL">Withdrawal</option>
                 </select>
               </div>
 
@@ -297,10 +297,13 @@ export function Dashboard() {
                   onChange={(e) => handleFilterChange('transactionStatus', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
                 >
-                  <option value="">All Status</option>
+                  <option value="">All Statuses</option>
                   <option value="CONFIRMED">Confirmed</option>
+                  <option value="SUCCESSFUL">Successful</option>
                   <option value="PENDING">Pending</option>
-                  <option value="EXPIRED">Expired</option>
+                  <option value="PROCESSING">Processing</option>
+                  <option value="FAILED">Failed</option>
+                  <option value="REJECTED">Rejected</option>
                 </select>
               </div>
 

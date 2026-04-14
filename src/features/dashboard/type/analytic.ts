@@ -156,65 +156,32 @@ export interface Transaction {
   userId?: string;
   username?: string;
   userEmail?: string;
-  type: string;
-  status: string;
+  type: 'DEPOSIT' | 'WITHDRAWAL' | 'INTERNAL_TRANSFER_SENT' | 'INTERNAL_TRANSFER_RECEIVED' | 'SWAP' | 'GIFTCARD' | string;
+  status: 'PENDING' | 'PROCESSING' | 'CONFIRMED' | 'SUCCESSFUL' | 'COMPLETED' | 'FAILED' | 'REJECTED' | 'APPROVED' | string;
   currency: string;
   amount: number;
   fee?: number;
   narration?: string;
   reference?: string;
   source?: string;
+  network?: string;
+  hash?: string;
+  obiexTransactionId?: string;
+  transactionId?: string;
+  actualReceiveAmount?: number;
+  metadata?: {
+    requestedAmount?: number;
+    totalDeducted?: number;
+    failureReason?: string;
+    refundedAt?: string;
+    refundAmount?: number;
+    ngnbCredited?: number;
+    [key: string]: unknown;
+  };
   createdAt: string;
   updatedAt?: string;
   completedAt?: string;
-  // Swap fields
-  fromCurrency?: string;
-  toCurrency?: string;
-  fromAmount?: number;
-  toAmount?: number;
-  swapType?: string;
-  exchangeRate?: number;
-  // Withdrawal fields
-  bankName?: string;
-  accountName?: string;
-  accountNumberMasked?: string;
-  withdrawalFee?: number;
-  // Transfer fields
-  recipientUsername?: string;
-  senderUsername?: string;
-  // Giftcard fields
-  cardType?: string;
-  country?: string;
-  expectedRate?: number;
-  // Chatbot transaction fields
-  kind?: string;
-  paymentId?: string;
-  webhookRef?: string;
-  token?: string;
-  network?: string;
-  sellAmount?: number;
-  originalAmount?: number;
-  originalCurrency?: string;
-  quoteRate?: number;
-  receiveCurrency?: string;
-  receiveAmount?: number;
-  actualReceiveAmount?: number;
-  actualRate?: number;
-  depositAddress?: string;
-  depositMemo?: string;
-  observedAmount?: number;
-  observedTxHash?: string;
-  observedAt?: string;
-  payout?: {
-    bankName?: string;
-    bankCode?: string;
-    accountNumber?: string;
-    accountName?: string;
-    capturedAt?: string;
-  };
-  payoutStatus?: string;
-  expiresAt?: string;
-  transactionType?: string;
+  failedAt?: string;
 }
 
 export interface RecentTransactionsResponse {
@@ -317,16 +284,24 @@ export interface SwapPairAnalyticsResponse {
   data: SwapPairStat[]
 }
 
-// Type unions for type safety (chatbot-only)
+// Type unions for type safety
 export type TransactionType =
-  | 'SELL'
-  | 'BUY'
+  | 'DEPOSIT'
+  | 'WITHDRAWAL'
+  | 'INTERNAL_TRANSFER_SENT'
+  | 'INTERNAL_TRANSFER_RECEIVED'
+  | 'SWAP'
+  | 'GIFTCARD'
 
 export type TransactionStatus =
-  | 'CONFIRMED'
-  | 'COMPLETED'
   | 'PENDING'
-  | 'EXPIRED'
+  | 'PROCESSING'
+  | 'CONFIRMED'
+  | 'SUCCESSFUL'
+  | 'COMPLETED'
+  | 'FAILED'
+  | 'REJECTED'
+  | 'APPROVED'
 
 export type UserVerificationStatus =
   | 'emailVerified'
