@@ -210,11 +210,11 @@ export function Dashboard() {
   }
 
   return (
-    <div className="w-full bg-white space-y-6 p-4 rounded">
+    <div className="w-full bg-white space-y-4 sm:space-y-6 p-3 sm:p-4 md:p-6 rounded">
       {/* Universal Search Bar */}
       <div className="w-full">
         <div className="flex gap-2">
-          <div className="relative flex-1">
+          <div className="relative flex-1 min-w-0">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             <input
               type="text"
@@ -222,18 +222,18 @@ export function Dashboard() {
               value={filters.searchTerm}
               onChange={(e) => handleFilterChange('searchTerm', e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && applyFilters()}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
             />
           </div>
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className={`flex items-center gap-2 px-4 py-2 border rounded-lg transition-colors ${showFilters ? 'bg-green-50 border-green-500 text-green-700' : 'border-gray-300 hover:bg-gray-50'
+            className={`flex items-center gap-1.5 px-3 sm:px-4 py-2 border rounded-lg transition-colors flex-shrink-0 ${showFilters ? 'bg-green-50 border-green-500 text-green-700' : 'border-gray-300 hover:bg-gray-50'
               }`}
           >
             <Filter className="h-4 w-4" />
-            <span>Filters</span>
+            <span className="hidden sm:inline text-sm">Filters</span>
             {activeFilterCount > 0 && (
-              <span className="ml-1 px-2 py-0.5 bg-green-500 text-white text-xs rounded-full">
+              <span className="px-1.5 py-0.5 bg-green-500 text-white text-xs rounded-full">
                 {activeFilterCount}
               </span>
             )}
@@ -241,9 +241,10 @@ export function Dashboard() {
           {activeFilterCount > 0 && (
             <button
               onClick={clearFilters}
-              className="px-4 py-2 text-red-600 hover:bg-red-50 border border-red-300 rounded-lg transition-colors"
+              className="px-3 sm:px-4 py-2 text-red-600 hover:bg-red-50 border border-red-300 rounded-lg transition-colors text-sm flex-shrink-0"
             >
-              Clear All
+              <span className="hidden sm:inline">Clear All</span>
+              <X className="h-4 w-4 sm:hidden" />
             </button>
           )}
         </div>
@@ -439,65 +440,41 @@ export function Dashboard() {
         )}
       </div>
 
-      {/* Dashboard Cards - Row 1 */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="p-6 bg-primary rounded-lg text-white relative overflow-hidden">
+      {/* Dashboard Cards - Row 1 + Volumes combined */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <Card className="p-4 sm:p-6 bg-primary rounded-lg text-white relative overflow-hidden">
           <img src={CardBg} className='object-fit absolute left-0 top-0' alt='Logo' />
-          <div className="flex flex-col items-start gap-3">
-            <p className="text-sm text-white font-semibold">Total Users</p>
-            <h3 className="text-[28px] font-bold">{loading ? '...' : analytics?.data?.users?.total ?? total}</h3>
+          <div className="flex flex-col items-start gap-2 sm:gap-3">
+            <p className="text-xs sm:text-sm text-white font-semibold">Total Users</p>
+            <h3 className="text-2xl sm:text-[28px] font-bold">{loading ? '...' : analytics?.data?.users?.total ?? total}</h3>
           </div>
         </Card>
 
-        <Card className="p-6 rounded-lg border-gray-200 shadow-none">
-          <div className="flex flex-col items-start gap-3">
-            <p className="text-sm text-gray-500 font-semibold">Total Trades</p>
-            <h3 className="text-2xl font-bold">{loading ? '...' : analytics?.data?.totalTrades ?? '—'}</h3>
-          </div>
-        </Card>
-
-        <Card className="p-6 rounded-lg border-gray-200 shadow-none">
-          <div className="flex flex-col items-start gap-3">
-            <p className="text-sm text-gray-500 font-semibold">Pending Trades</p>
-            <h3 className="text-2xl font-bold">{loading ? '...' : analytics?.data?.chatbotTrades?.overview?.pending ?? '—'}</h3>
-          </div>
-        </Card>
-
-        <Card className="p-6 rounded-lg border-gray-200 shadow-none">
-          <div className="flex flex-col items-start gap-3">
-            <p className="text-sm text-gray-500 font-semibold">Completed Trades</p>
-            <h3 className="text-2xl font-bold">{loading ? '...' : analytics?.data?.chatbotTrades?.overview?.completed ?? '—'}</h3>
-          </div>
-        </Card>
-      </div>
-
-      {/* Dashboard Cards - Row 2: Volumes */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card className="p-6 rounded-lg border-gray-200 shadow-none">
-          <div className="flex flex-col items-start gap-3">
-            <p className="text-sm text-gray-500 font-semibold">Trade Volume (NGN)</p>
+        <Card className="p-4 sm:p-6 rounded-lg border-gray-200 shadow-none">
+          <div className="flex flex-col items-start gap-2 sm:gap-3">
+            <p className="text-xs sm:text-sm text-gray-500 font-semibold">Trade Volume (NGN)</p>
             <p className="text-xs text-gray-400">NGN auto-converted for customers</p>
-            <h3 className="text-2xl font-bold">
+            <h3 className="text-xl sm:text-2xl font-bold">
               {loading ? '...' : `₦${(analytics?.data?.tradeVolumeNGN ?? 0).toLocaleString('en-NG', { maximumFractionDigits: 0 })}`}
             </h3>
           </div>
         </Card>
 
-        <Card className="p-6 rounded-lg border-gray-200 shadow-none">
-          <div className="flex flex-col items-start gap-3">
-            <p className="text-sm text-gray-500 font-semibold">Deposit Volume (USD)</p>
+        <Card className="p-4 sm:p-6 rounded-lg border-gray-200 shadow-none">
+          <div className="flex flex-col items-start gap-2 sm:gap-3">
+            <p className="text-xs sm:text-sm text-gray-500 font-semibold">Deposit Volume (USD)</p>
             <p className="text-xs text-gray-400">Successful deposits, all currencies</p>
-            <h3 className="text-2xl font-bold">
+            <h3 className="text-xl sm:text-2xl font-bold">
               {loading ? '...' : formatCurrency(analytics?.data?.depositVolume)}
             </h3>
           </div>
         </Card>
 
-        <Card className="p-6 rounded-lg border-gray-200 shadow-none">
-          <div className="flex flex-col items-start gap-3">
-            <p className="text-sm text-gray-500 font-semibold">Withdrawal Volume (NGN)</p>
+        <Card className="p-4 sm:p-6 rounded-lg border-gray-200 shadow-none">
+          <div className="flex flex-col items-start gap-2 sm:gap-3">
+            <p className="text-xs sm:text-sm text-gray-500 font-semibold">Withdrawal Volume (NGN)</p>
             <p className="text-xs text-gray-400">Total NGNB withdrawn to bank</p>
-            <h3 className="text-2xl font-bold">
+            <h3 className="text-xl sm:text-2xl font-bold">
               {loading ? '...' : `₦${(analytics?.data?.ngnzWithdrawals?.totalBankAmount ?? 0).toLocaleString('en-NG', { maximumFractionDigits: 0 })}`}
             </h3>
           </div>
@@ -522,7 +499,7 @@ export function Dashboard() {
             </svg>
           </div>
         ) : (
-          <div ref={tableContainerRef} className="max-h-[600px] overflow-y-auto">
+          <div ref={tableContainerRef} className="max-h-[400px] sm:max-h-[500px] md:max-h-[600px] overflow-y-auto overflow-x-auto">
             
             <DataTable columns={columns} data={transactions} />
 
