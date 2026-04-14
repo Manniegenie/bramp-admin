@@ -499,7 +499,7 @@ export function Dashboard() {
             </svg>
           </div>
         ) : (
-          <div ref={tableContainerRef} className="max-h-[400px] sm:max-h-[500px] md:max-h-[600px] overflow-y-auto overflow-x-auto">
+          <div ref={tableContainerRef} className="max-h-[400px] sm:max-h-[500px] md:max-h-[600px] overflow-y-auto">
             
             <DataTable columns={columns} data={transactions} />
 

@@ -37,14 +37,14 @@ export function DataTable<TData, TValue>({
         <h4 className="text-[18px] font-semibold">Recent Transactions</h4>
         {/* <Link to={`/usermanagement/disable2fa`} className="bg-white border border-green-700 w-fit px-3 py-1 rounded text-xs text-primary">Disable 2fa</Link> */}
       </div>
-      <div className="w-full overflow-x-auto rounded-md shadow-sm">
-        <Table className="w-full min-w-[2000px] border border-gray-200">
+      <div className="w-full rounded-md shadow-sm">
+        <Table className="w-full table-fixed border border-gray-200">
           <TableHeader className="bg-gray-50">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="border-b border-gray-200">
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} className="whitespace-nowrap px-4 py-3 text-left font-medium text-gray-900">
+                    <TableHead key={header.id} className="px-3 py-3 text-left font-medium text-gray-900 text-xs">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -66,7 +66,7 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="px-4 py-3 whitespace-nowrap">
+                    <TableCell key={cell.id} className="px-3 py-2 text-xs max-w-0">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}

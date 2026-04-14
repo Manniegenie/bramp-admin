@@ -3,20 +3,30 @@ import React from "react";
 import type { ColumnDef } from "@tanstack/react-table"
 import type { Transaction } from '../type/analytic'
 
+function Truncated({ value, className = '' }: { value: string; className?: string }) {
+  return (
+    <span className={`block truncate ${className}`} title={value}>
+      {value}
+    </span>
+  );
+}
+
 export const columns: ColumnDef<Transaction>[] = [
   {
     accessorKey: "id",
-    header: "Transaction ID",
+    header: "Txn ID",
     cell: info => {
       const value = info.getValue() as string;
-      return value ? (
-        <span className="font-mono text-xs">{value}</span>
-      ) : '—';
+      return value ? <Truncated value={value} className="font-mono text-xs" /> : '—';
     }
   },
   {
     accessorKey: "username",
     header: "User",
+    cell: info => {
+      const value = info.getValue() as string;
+      return value ? <Truncated value={value} /> : '—';
+    }
   },
   {
     accessorKey: "type",
@@ -80,9 +90,7 @@ export const columns: ColumnDef<Transaction>[] = [
     header: "Reference",
     cell: info => {
       const value = info.getValue() as string;
-      return value ? (
-        <span className="font-mono text-sm whitespace-nowrap">{value}</span>
-      ) : '—';
+      return value ? <Truncated value={value} className="font-mono text-xs" /> : '—';
     }
   },
   {
@@ -103,7 +111,7 @@ export const columns: ColumnDef<Transaction>[] = [
     header: "Payment ID",
     cell: info => {
       const value = info.getValue() as string | undefined;
-      return value ? <span className="font-mono text-xs whitespace-nowrap">{value}</span> : '—';
+      return value ? <Truncated value={value} className="font-mono text-xs" /> : '—';
     }
   },
   {
@@ -111,15 +119,15 @@ export const columns: ColumnDef<Transaction>[] = [
     header: "Webhook Ref",
     cell: info => {
       const value = info.getValue() as string | undefined;
-      return value ? <span className="font-mono text-xs whitespace-nowrap">{value}</span> : '—';
+      return value ? <Truncated value={value} className="font-mono text-xs" /> : '—';
     }
   },
   {
     accessorKey: "depositAddress",
-    header: "Deposit Address",
+    header: "Address",
     cell: info => {
       const value = info.getValue() as string | undefined;
-      return value ? <span className="font-mono text-xs whitespace-nowrap">{value}</span> : '—';
+      return value ? <Truncated value={value} className="font-mono text-xs" /> : '—';
     }
   },
   {
